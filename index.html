@@ -506,7 +506,7 @@ async function placeOrder(){
       document.getElementById("successOrderId").textContent=`Order ID: ${orderId} (Demo Mode)`;
       document.getElementById("successScreen").classList.add("show");
     } else {
-      await fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",body:JSON.stringify(payload)});
+      await fetch(SCRIPT_URL, {   method: "POST",   mode: "no-cors",   headers: { "Content-Type": "text/plain" },   body: JSON.stringify(payload) });
       document.getElementById("checkoutForm").style.display="none";
       document.getElementById("successOrderId").textContent=`Order ID: ${orderId}`;
       document.getElementById("successScreen").classList.add("show");
