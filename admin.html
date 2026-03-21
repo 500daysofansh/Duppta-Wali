@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DupattaWali — Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --saffron:#E8600A; --dark:#1A1A2E; --border:#E8D5C4;
+    --muted:#888; --green:#2D7A4F; --red:#E74C3C;
+    --card:#FFFFFF; --warm:#FFFAF5;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Sans',sans-serif; background:#F0F0F5; color:var(--dark); min-height:100vh; }
+
+  .login-screen { min-height:100vh; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,var(--dark) 0%,#3D1F00 100%); }
+  .login-box { background:#fff; border-radius:24px; padding:48px 40px; width:100%; max-width:400px; text-align:center; box-shadow:0 24px 80px rgba(0,0,0,0.3); }
+  .login-logo { font-family:'Playfair Display',serif; font-size:28px; font-weight:900; color:var(--saffron); margin-bottom:6px; }
+  .login-sub { font-size:13px; color:var(--muted); margin-bottom:32px; }
+  .login-box input { width:100%; padding:14px 16px; border:1.5px solid var(--border); border-radius:12px; font-family:'DM Sans',sans-serif; font-size:15px; outline:none; margin-bottom:14px; transition:border-color .2s; }
+  .login-box input:focus { border-color:var(--saffron); box-shadow:0 0 0 3px rgba(232,96,10,0.1); }
+  .login-btn { width:100%; padding:15px; background:var(--saffron); color:#fff; border:none; border-radius:12px; font-family:'DM Sans',sans-serif; font-size:16px; font-weight:700; cursor:pointer; transition:all .2s; }
+  .login-btn:hover { background:#c45208; }
+  .login-error { color:var(--red); font-size:13px; margin-top:10px; display:none; }
+
+  .app { display:none; min-height:100vh; }
+
+  .app-header { background:var(--dark); color:#fff; padding:0 28px; display:flex; align-items:center; justify-content:space-between; height:64px; position:sticky; top:0; z-index:50; box-shadow:0 2px 16px rgba(0,0,0,0.2); }
+  .app-header h1 { font-family:'Playfair Display',serif; font-size:20px; }
+  .app-header h1 span { color:var(--saffron); }
+  .header-right { display:flex; align-items:center; gap:14px; }
+  .live-dot { width:8px; height:8px; background:#2ECC71; border-radius:50%; animation:pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
+  .live-text { font-size:12px; color:#2ECC71; font-weight:600; }
+  .logout-btn { background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2); padding:7px 16px; border-radius:8px; font-family:'DM Sans',sans-serif; font-size:13px; cursor:pointer; }
+  .logout-btn:hover { background:rgba(255,255,255,0.2); }
+
+  .stats-bar { display:flex; gap:16px; padding:20px 28px; flex-wrap:wrap; }
+  .stat { background:var(--card); border-radius:14px; padding:18px 22px; flex:1; min-width:140px; box-shadow:0 2px 8px rgba(0,0,0,0.06); border-left:4px solid transparent; }
+  .stat.orange { border-left-color:var(--saffron); }
+  .stat.green  { border-left-color:var(--green); }
+  .stat.blue   { border-left-color:#2980B9; }
+  .stat.red    { border-left-color:var(--red); }
+  .stat-label { font-size:11px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px; }
+  .stat-value { font-size:26px; font-weight:700; }
+  .stat.orange .stat-value { color:var(--saffron); }
+  .stat.green  .stat-value { color:var(--green); }
+  .stat.blue   .stat-value { color:#2980B9; }
+  .stat.red    .stat-value { color:var(--red); }
+
+  .toolbar { padding:0 28px 16px; display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  .search-box { flex:1; min-width:220px; padding:10px 16px; border:1.5px solid var(--border); border-radius:10px; font-family:'DM Sans',sans-serif; font-size:14px; outline:none; background:#fff; transition:border-color .2s; }
+  .search-box:focus { border-color:var(--saffron); }
+  .filter-select { padding:10px 14px; border:1.5px solid var(--border); border-radius:10px; font-family:'DM Sans',sans-serif; font-size:14px; outline:none; background:#fff; cursor:pointer; }
+  .refresh-btn { padding:10px 20px; background:var(--saffron); color:#fff; border:none; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; cursor:pointer; transition:all .2s; display:flex; align-items:center; gap:6px; }
+  .refresh-btn:hover { background:#c45208; }
+  .spin { animation:spin .6s linear infinite; display:inline-block; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+
+  .table-wrap { padding:0 28px 40px; overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; background:var(--card); border-radius:16px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.07); font-size:13px; min-width:1100px; }
+  thead { background:var(--dark); color:#fff; }
+  th { padding:14px; text-align:left; font-weight:600; white-space:nowrap; font-size:12px; letter-spacing:.3px; }
+  td { padding:13px 14px; border-bottom:1px solid var(--border); vertical-align:middle; }
+  tr:last-child td { border-bottom:none; }
+  tr.placed td { background:#F0FFF4; }
+  tr.placed td:first-child { border-left:3px solid var(--green); }
+  tr.pending td:first-child { border-left:3px solid #F39C12; }
+
+  .badge { display:inline-flex; align-items:center; gap:5px; padding:4px 12px; border-radius:50px; font-size:11px; font-weight:700; white-space:nowrap; }
+  .badge-pending { background:#FFF3CD; color:#856404; }
+  .badge-placed  { background:#D4EDDA; color:var(--green); }
+  .badge-cod     { background:#E8F4FD; color:#2980B9; }
+
+  .action-btn { padding:7px 14px; border:none; border-radius:8px; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:700; cursor:pointer; transition:all .2s; white-space:nowrap; }
+  .mark-placed  { background:var(--green); color:#fff; }
+  .mark-placed:hover  { background:#1e5c39; }
+  .mark-pending { background:#F39C12; color:#fff; }
+  .mark-pending:hover { background:#d68910; }
+  .action-btn:disabled { opacity:.5; cursor:not-allowed; }
+
+  .empty   { text-align:center; padding:60px; color:var(--muted); }
+  .empty h3 { font-size:20px; margin-bottom:8px; }
+  .loading { text-align:center; padding:60px; color:var(--muted); font-size:15px; }
+
+  .order-id { font-family:monospace; font-size:12px; background:#F5F5F5; padding:3px 8px; border-radius:6px; }
+  .phone-link { color:var(--saffron); font-weight:600; text-decoration:none; }
+  .phone-link:hover { text-decoration:underline; }
+
+  .toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(80px); color:#fff; padding:12px 24px; border-radius:50px; font-size:14px; font-weight:600; z-index:999; transition:transform .3s cubic-bezier(0.34,1.56,0.64,1); white-space:nowrap; box-shadow:0 8px 32px rgba(0,0,0,0.2); }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+  .toast.success { background:var(--green); }
+  .toast.error   { background:var(--red); }
+</style>
+</head>
+<body>
+
+<script>
+  var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwR6ztyFWkuFYtvBRrDhCFnsfdhmRcsg6boNrkoj6Sc3zDcTw3zkXVyIBFI6p-kh851/exec";
+  var ADMIN_PASSWORD = "dupattawali@2024";
+</script>
+
+<!-- Login -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">DupattaWali</div>
+    <div class="login-sub">Admin Panel · Team Access Only</div>
+    <input type="text" id="loginUser" placeholder="Your name (Anshuman / Aditya / Mannu)" />
+    <input type="password" id="loginPass" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()" />
+    <button class="login-btn" onclick="doLogin()">Login →</button>
+    <div class="login-error" id="loginError">❌ Wrong password. Try again.</div>
+  </div>
+</div>
+
+<!-- App -->
+<div class="app" id="mainApp">
+  <div class="app-header">
+    <h1>DupattaWali <span>Orders</span></h1>
+    <div class="header-right">
+      <div class="live-dot"></div>
+      <span class="live-text">LIVE</span>
+      <span id="adminName" style="font-size:13px;opacity:0.7"></span>
+      <button class="logout-btn" onclick="doLogout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat orange"><div class="stat-label">Total Orders</div><div class="stat-value" id="statTotal">—</div></div>
+    <div class="stat red"><div class="stat-label">Pending</div><div class="stat-value" id="statPending">—</div></div>
+    <div class="stat green"><div class="stat-label">Placed on Meesho</div><div class="stat-value" id="statPlaced">—</div></div>
+    <div class="stat blue"><div class="stat-label">Total Revenue</div><div class="stat-value" id="statRevenue">—</div></div>
+  </div>
+
+  <div class="toolbar">
+    <input class="search-box" id="searchBox" placeholder="🔍  Search by name, phone, order ID..." oninput="renderTable()" />
+    <select class="filter-select" id="statusFilter" onchange="renderTable()">
+      <option value="all">All Orders</option>
+      <option value="Pending">Pending</option>
+      <option value="Placed on Meesho">Placed on Meesho</option>
+    </select>
+    <button class="refresh-btn" id="refreshBtn" onclick="loadOrders()">
+      <span id="refreshIcon">↻</span> Refresh
+    </button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Order ID</th><th>Date & Time</th><th>Customer</th>
+          <th>Phone</th><th>Product</th><th>Qty</th><th>Unit Price</th>
+          <th>Total</th><th>Address</th><th>City / State</th><th>Pincode</th>
+          <th>Payment</th><th>Status</th><th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="ordersBody">
+        <tr><td colspan="15" class="loading">🔄 Loading orders...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var allOrders = [];
+
+function doLogin() {
+  var user = document.getElementById("loginUser").value.trim();
+  var pass = document.getElementById("loginPass").value.trim();
+  if (!user) { document.getElementById("loginError").textContent = "❌ Enter your name."; document.getElementById("loginError").style.display = "block"; return; }
+  if (pass !== ADMIN_PASSWORD) { document.getElementById("loginError").style.display = "block"; return; }
+  document.getElementById("loginScreen").style.display = "none";
+  document.getElementById("mainApp").style.display = "block";
+  document.getElementById("adminName").textContent = "👤 " + user;
+  loadOrders();
+  setInterval(loadOrders, 60000);
+}
+
+function doLogout() {
+  document.getElementById("loginScreen").style.display = "flex";
+  document.getElementById("mainApp").style.display = "none";
+  document.getElementById("loginPass").value = "";
+  document.getElementById("loginError").style.display = "none";
+}
+
+function loadOrders() {
+  var icon = document.getElementById("refreshIcon");
+  icon.classList.add("spin");
+  var url = SCRIPT_URL + "?action=getOrders&password=" + encodeURIComponent(ADMIN_PASSWORD) + "&t=" + Date.now();
+  fetch(url)
+    .then(function(r){ return r.json(); })
+    .then(function(data) {
+      icon.classList.remove("spin");
+      if (!data.success) { showToast("❌ " + data.error, "error"); return; }
+      allOrders = data.orders || [];
+      updateStats();
+      renderTable();
+    })
+    .catch(function() {
+      icon.classList.remove("spin");
+      showToast("❌ Could not load orders", "error");
+    });
+}
+
+function updateStats() {
+  var pending = allOrders.filter(function(o){ return o["Status"] === "Pending"; }).length;
+  var placed  = allOrders.filter(function(o){ return o["Status"] === "Placed on Meesho"; }).length;
+  var seen = {}, revenue = 0;
+  allOrders.forEach(function(o) {
+    if (!seen[o["Order ID"]]) { seen[o["Order ID"]] = true; revenue += parseFloat(o["Grand Total (Rs.)"] || 0); }
+  });
+  document.getElementById("statTotal").textContent = allOrders.length;
+  document.getElementById("statPending").textContent = pending;
+  document.getElementById("statPlaced").textContent = placed;
+  document.getElementById("statRevenue").textContent = "Rs." + revenue.toLocaleString("en-IN");
+}
+
+function renderTable() {
+  var search = document.getElementById("searchBox").value.toLowerCase();
+  var filter = document.getElementById("statusFilter").value;
+  var filtered = allOrders.filter(function(o) {
+    var ms = !search || (o["Customer Name"]||"").toLowerCase().includes(search) || (o["Phone"]||"").includes(search) || (o["Order ID"]||"").toLowerCase().includes(search) || (o["Product Name"]||"").toLowerCase().includes(search);
+    var mf = filter === "all" || o["Status"] === filter;
+    return ms && mf;
+  });
+  var tbody = document.getElementById("ordersBody");
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="15" class="empty"><h3>No orders found 📭</h3></td></tr>';
+    return;
+  }
+  tbody.innerHTML = filtered.map(function(o, i) {
+    var placed = o["Status"] === "Placed on Meesho";
+    var id = o["Order ID"] || "";
+    return '<tr class="' + (placed?"placed":"pending") + '">'
+      + '<td style="color:var(--muted);font-size:12px">' + (i+1) + '</td>'
+      + '<td><span class="order-id">' + id + '</span></td>'
+      + '<td style="white-space:nowrap;font-size:12px">' + (o["Date"]||"") + '<br/><span style="color:var(--muted)">' + (o["Time"]||"") + '</span></td>'
+      + '<td><strong>' + (o["Customer Name"]||"") + '</strong></td>'
+      + '<td><a class="phone-link" href="tel:' + o["Phone"] + '">' + (o["Phone"]||"") + '</a></td>'
+      + '<td>' + (o["Product Name"]||"") + '</td>'
+      + '<td style="text-align:center;font-weight:600">' + (o["Quantity"]||"") + '</td>'
+      + '<td>Rs.' + (o["Unit Price (Rs.)"]||"") + '</td>'
+      + '<td><strong>Rs.' + (o["Total Price (Rs.)"]||"") + '</strong></td>'
+      + '<td style="font-size:12px;max-width:160px">' + (o["Address"]||"") + '</td>'
+      + '<td style="font-size:12px">' + (o["City"]||"") + '<br/><span style="color:var(--muted)">' + (o["State"]||"") + '</span></td>'
+      + '<td>' + (o["Pincode"]||"") + '</td>'
+      + '<td><span class="badge badge-cod">💵 COD</span></td>'
+      + '<td><span class="badge ' + (placed?"badge-placed":"badge-pending") + '">' + (placed?"✅ Placed on Meesho":"⏳ Pending") + '</span></td>'
+      + '<td>' + (placed
+          ? '<button class="action-btn mark-pending" onclick="updateStatus(\'' + id + '\',\'Pending\',this)">↩ Undo</button>'
+          : '<button class="action-btn mark-placed" onclick="updateStatus(\'' + id + '\',\'Placed on Meesho\',this)">✅ Placed on Meesho</button>')
+      + '</td></tr>';
+  }).join("");
+}
+
+function updateStatus(orderId, newStatus, btn) {
+  btn.disabled = true;
+  btn.textContent = "Saving...";
+  fetch(SCRIPT_URL, {
+    method:"POST", mode:"no-cors",
+    headers:{"Content-Type":"text/plain"},
+    body: JSON.stringify({ action:"updateStatus", orderId:orderId, status:newStatus })
+  }).then(function() {
+    allOrders.forEach(function(o){ if(o["Order ID"]===orderId) o["Status"]=newStatus; });
+    updateStats(); renderTable();
+    showToast(newStatus==="Placed on Meesho" ? "✅ Marked as Placed on Meesho!" : "↩ Marked as Pending", "success");
+  }).catch(function() {
+    btn.disabled = false;
+    showToast("❌ Update failed", "error");
+  });
+}
+
+function showToast(msg, type) {
+  var t = document.getElementById("toast");
+  t.textContent = msg; t.className = "toast " + (type||"") + " show";
+  setTimeout(function(){ t.classList.remove("show"); }, 3000);
+}
+</script>
+</body>
+</html>
