@@ -50,7 +50,7 @@
   .refresh-btn:hover { background:#c45208; }
 
   .table-wrap { padding:0 28px 40px; overflow-x:auto; }
-  table { width:100%; border-collapse:collapse; background:#fff; border-radius:16px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,.07); font-size:13px; min-width:1200px; }
+  table { width:100%; border-collapse:collapse; background:#fff; border-radius:16px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,.07); font-size:13px; min-width:1300px; }
   thead { background:var(--dark); color:#fff; }
   th { padding:14px; text-align:left; font-weight:600; white-space:nowrap; font-size:12px; }
   td { padding:12px 14px; border-bottom:1px solid var(--border); vertical-align:middle; }
@@ -60,21 +60,22 @@
   tr.pending td:first-child { border-left:3px solid #F39C12; }
 
   .badge { display:inline-flex; align-items:center; padding:4px 10px; border-radius:50px; font-size:11px; font-weight:700; white-space:nowrap; }
-  .bp { background:#FFF3CD; color:#856404; }
+  .bp  { background:#FFF3CD; color:#856404; }
   .bpl { background:#D4EDDA; color:var(--green); }
-  .bc { background:#E8F4FD; color:#2980B9; }
+  .bc  { background:#E8F4FD; color:#2980B9; }
 
   .abtn { padding:7px 14px; border:none; border-radius:8px; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap; }
   .abtn.gn { background:var(--green); color:#fff; }
   .abtn.gn:hover { background:#1e5c39; }
   .abtn.or { background:#F39C12; color:#fff; }
-  .abtn.or:hover { background:#d68910; }
   .abtn:disabled { opacity:.5; cursor:not-allowed; }
 
   .order-id { font-family:monospace; font-size:12px; background:#F5F5F5; padding:3px 8px; border-radius:6px; }
   .phone-link { color:var(--saffron); font-weight:600; text-decoration:none; }
   .msg-row { text-align:center; padding:50px; color:var(--muted); }
   .msg-row h3 { font-size:18px; margin-bottom:8px; }
+
+  .debug-box { margin:0 28px 16px; padding:14px 18px; background:#FFF3CD; border:1.5px solid #FFD700; border-radius:10px; font-size:13px; color:#7A5C00; display:none; }
 
   .toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(100px); color:#fff; padding:12px 24px; border-radius:50px; font-size:14px; font-weight:600; z-index:999; transition:transform .3s cubic-bezier(.34,1.56,.64,1); white-space:nowrap; }
   .toast.show { transform:translateX(-50%) translateY(0); }
@@ -121,6 +122,8 @@
     <div class="stat s4"><div class="stat-label">Total Revenue</div><div class="stat-value" id="sRevenue">—</div></div>
   </div>
 
+  <div class="debug-box" id="debugBox"></div>
+
   <div class="toolbar">
     <input class="search-box" id="searchBox" placeholder="🔍 Search name, phone, order ID..." oninput="renderTable()" />
     <select class="filter-sel" id="statusFilter" onchange="renderTable()">
@@ -135,15 +138,16 @@
     <table>
       <thead>
         <tr>
-          <th>#</th><th>Order ID</th><th>Date & Time</th>
-          <th>Customer</th><th>Phone</th><th>Product</th>
-          <th>Qty</th><th>Unit Price</th><th>Row Total</th><th>Grand Total</th>
+          <th>#</th><th>Order ID</th><th>Date</th><th>Time</th>
+          <th>Customer</th><th>Phone</th><th>Email</th>
+          <th>Product</th><th>Qty</th><th>Unit Price</th>
+          <th>Row Total</th><th>Grand Total</th>
           <th>Address</th><th>City</th><th>State</th><th>Pincode</th>
           <th>Payment</th><th>Status</th><th>Action</th>
         </tr>
       </thead>
       <tbody id="ordersBody">
-        <tr><td colspan="17" class="msg-row"><h3>🔄 Loading...</h3></td></tr>
+        <tr><td colspan="19" class="msg-row"><h3>Login to view orders</h3></td></tr>
       </tbody>
     </table>
   </div>
@@ -154,7 +158,6 @@
 <script>
 var allOrders = [];
 
-// ── LOGIN ─────────────────────────────────────────────────────
 function doLogin() {
   var user = document.getElementById("loginUser").value.trim();
   var pass = document.getElementById("loginPass").value;
@@ -174,28 +177,41 @@ function doLogout() {
   document.getElementById("loginScreen").style.display = "flex";
   document.getElementById("mainApp").style.display = "none";
   document.getElementById("loginPass").value = "";
+  document.getElementById("loginError").style.display = "none";
 }
 
-// ── LOAD ORDERS via JSONP ─────────────────────────────────────
 function loadOrders() {
-  showToast("🔄 Loading orders...", "i");
+  document.getElementById("ordersBody").innerHTML =
+    '<tr><td colspan="19" class="msg-row"><h3>🔄 Loading orders...</h3></td></tr>';
 
-  // Remove previous script tag
   var old = document.getElementById("jsonpTag");
   if (old) old.parentNode.removeChild(old);
 
-  // Global callback for JSONP
   window._ordersCallback = function(data) {
+    var dbx = document.getElementById("debugBox");
+
     if (!data.success) {
-      showToast("❌ " + (data.error || "Failed to load"), "e");
+      dbx.style.display = "block";
+      dbx.textContent = "❌ Error from server: " + (data.error || "Unknown error");
+      showToast("❌ " + (data.error || "Failed"), "e");
       document.getElementById("ordersBody").innerHTML =
-        '<tr><td colspan="17" class="msg-row"><h3>❌ Error: ' + (data.error || "Unknown") + '</h3></td></tr>';
+        '<tr><td colspan="19" class="msg-row"><h3>❌ ' + (data.error || "Error") + '</h3></td></tr>';
       return;
     }
+
+    dbx.style.display = "none";
     allOrders = data.orders || [];
+
+    if (allOrders.length === 0) {
+      document.getElementById("ordersBody").innerHTML =
+        '<tr><td colspan="19" class="msg-row"><h3>📭 No orders yet</h3><p>Orders will appear here once customers place them.</p></td></tr>';
+      showToast("No orders yet", "i");
+    } else {
+      showToast("✅ " + allOrders.length + " orders loaded", "s");
+    }
+
     updateStats();
     renderTable();
-    showToast("✅ " + allOrders.length + " orders loaded", "s");
   };
 
   var script = document.createElement("script");
@@ -206,14 +222,13 @@ function loadOrders() {
     + "&callback=_ordersCallback"
     + "&t=" + Date.now();
   script.onerror = function() {
-    showToast("❌ Script load failed", "e");
-    document.getElementById("ordersBody").innerHTML =
-      '<tr><td colspan="17" class="msg-row"><h3>❌ Could not reach server</h3><p>Check your internet connection.</p></td></tr>';
+    document.getElementById("debugBox").style.display = "block";
+    document.getElementById("debugBox").textContent = "❌ Script failed to load. Check internet or script URL.";
+    showToast("❌ Could not reach server", "e");
   };
   document.head.appendChild(script);
 }
 
-// ── STATS ─────────────────────────────────────────────────────
 function updateStats() {
   var pending = 0, placed = 0, revenue = 0, seen = {};
   allOrders.forEach(function(o) {
@@ -230,7 +245,6 @@ function updateStats() {
   document.getElementById("sRevenue").textContent = "Rs." + revenue.toLocaleString("en-IN");
 }
 
-// ── RENDER TABLE ──────────────────────────────────────────────
 function renderTable() {
   var search = document.getElementById("searchBox").value.toLowerCase();
   var filter = document.getElementById("statusFilter").value;
@@ -240,14 +254,15 @@ function renderTable() {
       || (o["Customer Name"] || "").toLowerCase().includes(search)
       || (o["Phone"] || "").toString().includes(search)
       || (o["Order ID"] || "").toLowerCase().includes(search)
-      || (o["Product Name"] || "").toLowerCase().includes(search);
+      || (o["Product Name"] || "").toLowerCase().includes(search)
+      || (o["City"] || "").toLowerCase().includes(search);
     var mf = filter === "all" || o["Status"] === filter;
     return ms && mf;
   });
 
   var tbody = document.getElementById("ordersBody");
   if (!filtered.length) {
-    tbody.innerHTML = '<tr><td colspan="17" class="msg-row"><h3>📭 No orders found</h3><p>Try different search or filter.</p></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="19" class="msg-row"><h3>📭 No orders found</h3><p>Try different search or filter.</p></td></tr>';
     return;
   }
 
@@ -257,28 +272,30 @@ function renderTable() {
     return '<tr class="' + (placed ? "placed" : "pending") + '">'
       + '<td style="color:var(--muted);font-size:11px">' + (i + 1) + '</td>'
       + '<td><span class="order-id">' + id + '</span></td>'
-      + '<td style="font-size:12px;white-space:nowrap">' + (o["Date"] || "") + '<br><span style="color:var(--muted)">' + (o["Time"] || "") + '</span></td>'
+      + '<td style="white-space:nowrap;font-size:12px">' + (o["Date"] || "") + '</td>'
+      + '<td style="white-space:nowrap;font-size:12px;color:var(--muted)">' + (o["Time"] || "") + '</td>'
       + '<td><strong>' + (o["Customer Name"] || "") + '</strong></td>'
       + '<td><a class="phone-link" href="tel:' + (o["Phone"] || "") + '">' + (o["Phone"] || "") + '</a></td>'
-      + '<td style="max-width:160px">' + (o["Product Name"] || "") + '</td>'
+      + '<td style="font-size:12px;color:var(--muted)">' + (o["Email"] || "") + '</td>'
+      + '<td style="max-width:160px">' + (o["Product Name"] || "") + '<br><span style="font-size:11px;color:var(--muted)">' + (o["Product ID"] || "") + '</span></td>'
       + '<td style="text-align:center;font-weight:700">' + (o["Quantity"] || "") + '</td>'
       + '<td>Rs.' + (o["Unit Price (Rs.)"] || "") + '</td>'
       + '<td><strong>Rs.' + (o["Total Price (Rs.)"] || "") + '</strong></td>'
       + '<td><strong style="color:var(--saffron)">Rs.' + (o["Grand Total (Rs.)"] || "") + '</strong></td>'
-      + '<td style="font-size:12px;max-width:160px">' + (o["Address"] || "") + '</td>'
+      + '<td style="font-size:12px;max-width:180px">' + (o["Address"] || "") + '</td>'
       + '<td style="font-size:12px">' + (o["City"] || "") + '</td>'
       + '<td style="font-size:12px">' + (o["State"] || "") + '</td>'
       + '<td>' + (o["Pincode"] || "") + '</td>'
       + '<td><span class="badge bc">💵 COD</span></td>'
       + '<td><span class="badge ' + (placed ? "bpl" : "bp") + '">' + (placed ? "✅ Placed" : "⏳ Pending") + '</span></td>'
-      + '<td>' + (placed
+      + '<td>'
+        + (placed
           ? '<button class="abtn or" onclick="updateStatus(\'' + id + '\',\'Pending\',this)">↩ Undo</button>'
-          : '<button class="abtn gn" onclick="updateStatus(\'' + id + '\',\'Placed on Meesho\',this)">✅ Placed on Meesho</button>')
+          : '<button class="abtn gn" onclick="updateStatus(\'' + id + '\',\'Placed on Meesho\',this)">✅ Mark Placed</button>')
       + '</td></tr>';
   }).join("");
 }
 
-// ── UPDATE STATUS ─────────────────────────────────────────────
 function updateStatus(orderId, newStatus, btn) {
   btn.disabled = true;
   btn.textContent = "Saving...";
@@ -296,19 +313,18 @@ function updateStatus(orderId, newStatus, btn) {
     showToast(newStatus === "Placed on Meesho" ? "✅ Marked as Placed on Meesho!" : "↩ Marked as Pending", "s");
   }).catch(function() {
     btn.disabled = false;
-    btn.textContent = newStatus === "Placed on Meesho" ? "✅ Placed on Meesho" : "↩ Undo";
     showToast("❌ Update failed. Try again.", "e");
   });
 }
 
-// ── TOAST ─────────────────────────────────────────────────────
 function showToast(msg, type) {
   var t = document.getElementById("toast");
   t.textContent = msg;
   t.className = "toast " + (type || "i") + " show";
-  clearTimeout(window._toastTimer);
-  window._toastTimer = setTimeout(function() { t.classList.remove("show"); }, 3000);
+  clearTimeout(window._tt);
+  window._tt = setTimeout(function() { t.classList.remove("show"); }, 3000);
 }
 </script>
 </body>
 </html>
+https://script.google.com/macros/s/AKfycby3MNYkhQHos3mU_GVn_VCkKAIBhgUD1xS22w9Q5bRD2Ey4xVpLDW3PuCrMlh2taHuA/exec?action=getOrders&password=dupattawali@2024
