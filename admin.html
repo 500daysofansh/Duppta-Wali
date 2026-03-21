@@ -188,20 +188,35 @@ function doLogout() {
 function loadOrders() {
   var icon = document.getElementById("refreshIcon");
   icon.classList.add("spin");
-  var url = SCRIPT_URL + "?action=getOrders&password=" + encodeURIComponent(ADMIN_PASSWORD) + "&t=" + Date.now();
-  fetch(url)
-    .then(function(r){ return r.json(); })
-    .then(function(data) {
-      icon.classList.remove("spin");
-      if (!data.success) { showToast("❌ " + data.error, "error"); return; }
-      allOrders = data.orders || [];
-      updateStats();
-      renderTable();
-    })
-    .catch(function() {
-      icon.classList.remove("spin");
-      showToast("❌ Could not load orders", "error");
-    });
+
+  // Remove old script tag if exists
+  var old = document.getElementById("jsonpScript");
+  if (old) old.remove();
+
+  // JSONP callback
+  window.handleOrders = function(data) {
+    icon.classList.remove("spin");
+    if (!data.success) { showToast("❌ " + (data.error || "Error"), "error"); return; }
+    allOrders = data.orders || [];
+    updateStats();
+    renderTable();
+    if (allOrders.length === 0) {
+      document.getElementById("ordersBody").innerHTML = '<tr><td colspan="15" class="empty"><h3>No orders yet 📭</h3><p>Orders will appear here once customers place them.</p></td></tr>';
+    }
+  };
+
+  var script = document.createElement("script");
+  script.id = "jsonpScript";
+  script.src = SCRIPT_URL
+    + "?action=getOrders"
+    + "&password=" + encodeURIComponent(ADMIN_PASSWORD)
+    + "&callback=handleOrders"
+    + "&t=" + Date.now();
+  script.onerror = function() {
+    icon.classList.remove("spin");
+    showToast("❌ Could not load orders", "error");
+  };
+  document.body.appendChild(script);
 }
 
 function updateStats() {
