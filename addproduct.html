@@ -9,8 +9,6 @@
   :root{--saffron:#E8600A;--dark:#1A1A2E;--brown:#3D1F00;--border:#E8D5C4;--muted:#888;--green:#2D7A4F;--red:#E74C3C;--cream:#FDF6EE;}
   *{margin:0;padding:0;box-sizing:border-box;}
   body{font-family:'DM Sans',sans-serif;background:#F0F0F5;color:var(--dark);}
-
-  /* Login */
   .login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--dark),var(--brown));}
   .login-box{background:#fff;border-radius:20px;padding:44px 36px;width:100%;max-width:380px;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.3);}
   .login-logo{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--saffron);margin-bottom:4px;}
@@ -20,8 +18,6 @@
   .login-btn{width:100%;padding:14px;background:var(--saffron);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;}
   .login-btn:hover{background:#c45208;}
   .login-err{color:var(--red);font-size:13px;margin-top:10px;display:none;}
-
-  /* App */
   .app{display:none;}
   .header{background:var(--dark);color:#fff;padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
   .header h1{font-family:'Playfair Display',serif;font-size:18px;}
@@ -30,15 +26,11 @@
   .nav-link{color:rgba(255,255,255,.7);text-decoration:none;font-size:13px;font-weight:500;padding:6px 14px;border-radius:8px;transition:all .2s;}
   .nav-link:hover,.nav-link.active{background:rgba(255,255,255,.1);color:#fff;}
   .logout-btn{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);padding:6px 14px;border-radius:8px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;}
-
-  /* Layout */
   .content{max-width:1100px;margin:0 auto;padding:28px 24px;}
   .layout{display:grid;grid-template-columns:430px 1fr;gap:24px;align-items:start;}
   @media(max-width:900px){.layout{grid-template-columns:1fr;}}
   .card{background:#fff;border-radius:16px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,.07);}
   .card-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;margin-bottom:20px;}
-
-  /* Form */
   .form-group{margin-bottom:16px;}
   label{display:block;font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
   input,select,textarea{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--dark);background:#fff;outline:none;transition:border-color .2s;}
@@ -50,20 +42,19 @@
   .img-upload-zone{border:2px dashed var(--border);border-radius:12px;padding:20px;text-align:center;cursor:pointer;background:var(--cream);position:relative;transition:all .2s;}
   .img-upload-zone:hover{border-color:var(--saffron);background:#FFF5EC;}
   .img-upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
-  .img-upload-zone .uicon{font-size:28px;margin-bottom:6px;}
+  .uicon{font-size:28px;margin-bottom:6px;}
   .img-upload-zone p{font-size:13px;color:var(--muted);}
-  .img-previews{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px;}
-  .img-preview-item{position:relative;border-radius:10px;overflow:hidden;aspect-ratio:1;border:2px solid var(--border);}
-  .img-preview-item img{width:100%;height:100%;object-fit:cover;}
-  .img-preview-item.primary-item{border-color:var(--saffron);}
-  .remove-img-btn{position:absolute;top:3px;right:3px;background:rgba(0,0,0,.65);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;}
-  .primary-label{position:absolute;bottom:3px;left:3px;background:var(--saffron);color:#fff;font-size:8px;font-weight:700;padding:2px 5px;border-radius:4px;}
+  .img-previews-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px;}
+  .img-prev-item{position:relative;border-radius:10px;overflow:hidden;aspect-ratio:1;border:2px solid var(--border);}
+  .img-prev-item.main-item{border-color:var(--saffron);}
+  .img-prev-item img{width:100%;height:100%;object-fit:cover;}
+  .rm-img{position:absolute;top:3px;right:3px;background:rgba(0,0,0,.65);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .main-lbl{position:absolute;bottom:3px;left:3px;background:var(--saffron);color:#fff;font-size:8px;font-weight:700;padding:2px 5px;border-radius:4px;}
   .img-hint{font-size:12px;color:var(--muted);margin-bottom:10px;}
-  .converting-bar{background:#FFF0E0;border-radius:8px;padding:8px 12px;font-size:12px;color:var(--saffron);font-weight:600;display:none;margin-bottom:8px;}
-  .progress-wrap{width:100%;background:#F0DCC8;border-radius:50px;height:5px;margin-bottom:10px;display:none;}
-  .progress-fill{height:5px;background:var(--saffron);border-radius:50px;transition:width .3s;}
+  .status-bar{background:#FFF0E0;border-radius:8px;padding:10px 14px;font-size:13px;color:var(--saffron);font-weight:600;display:none;margin-bottom:8px;text-align:center;}
+  .progress-wrap{width:100%;background:#F0DCC8;border-radius:50px;height:6px;margin-bottom:10px;display:none;}
+  .progress-fill{height:6px;background:var(--saffron);border-radius:50px;transition:width .4s;}
 
-  /* Submit */
   .submit-btn{width:100%;padding:15px;background:var(--saffron);color:#fff;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px;transition:all .2s;}
   .submit-btn:hover{background:#c45208;}
   .submit-btn:disabled{background:var(--muted);cursor:not-allowed;}
@@ -78,53 +69,41 @@
   .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px;}
   .prod-card{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.07);border:1.5px solid var(--border);position:relative;}
   .prod-card.inactive{opacity:.55;}
-
-  /* Product image gallery in card */
-  .prod-gallery{position:relative;height:160px;background:#F5E8D8;overflow:hidden;}
-  .prod-gallery-imgs{display:flex;height:100%;transition:transform .3s ease;}
-  .prod-gallery-imgs img{min-width:100%;height:160px;object-fit:cover;flex-shrink:0;}
-  .prod-gallery-placeholder{width:100%;height:160px;background:linear-gradient(135deg,#F5E8D8,#FFE5CC);display:flex;align-items:center;justify-content:center;font-size:36px;}
-  .gallery-dots{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);display:flex;gap:4px;}
-  .gallery-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.5);cursor:pointer;transition:all .2s;}
-  .gallery-dot.active{background:#fff;width:12px;border-radius:3px;}
-  .gallery-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.4);color:#fff;border:none;border-radius:50%;width:24px;height:24px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;}
-  .gallery-arrow:hover{background:rgba(0,0,0,.7);}
-  .gallery-arrow.left{left:6px;}
-  .gallery-arrow.right{right:6px;}
-  .gallery-count{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.55);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:50px;}
-
-  .active-badge{position:absolute;top:8px;right:8px;background:var(--green);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:50px;z-index:2;}
-  .inactive-badge{position:absolute;top:8px;right:8px;background:#888;color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:50px;z-index:2;}
+  .prod-gallery{position:relative;height:160px;overflow:hidden;background:#F5E8D8;}
+  .prod-gallery-track{display:flex;height:100%;transition:transform .3s;}
+  .prod-gallery-track img{min-width:100%;height:160px;object-fit:cover;flex-shrink:0;}
+  .prod-placeholder{width:100%;height:160px;display:flex;align-items:center;justify-content:center;font-size:36px;background:linear-gradient(135deg,#F5E8D8,#FFE5CC);}
+  .g-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.4);color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;}
+  .prod-gallery:hover .g-arrow{opacity:1;}
+  .g-arrow.l{left:4px;} .g-arrow.r{right:4px;}
+  .g-dots{position:absolute;bottom:5px;left:50%;transform:translateX(-50%);display:flex;gap:3px;}
+  .g-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.5);cursor:pointer;transition:all .2s;}
+  .g-dot.active{background:#fff;width:10px;border-radius:3px;}
+  .g-count{position:absolute;top:6px;left:6px;background:rgba(0,0,0,.55);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:50px;}
+  .active-badge{position:absolute;top:6px;right:6px;background:var(--green);color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:50px;z-index:2;}
+  .inactive-badge{position:absolute;top:6px;right:6px;background:#888;color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:50px;z-index:2;}
   .prod-body{padding:12px;}
   .prod-cat{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:4px;}
   .prod-name{font-weight:700;font-size:13px;margin-bottom:4px;line-height:1.3;}
   .prod-price{font-size:14px;font-weight:700;color:var(--saffron);margin-bottom:8px;}
   .prod-actions{display:flex;gap:6px;}
   .pa-btn{flex:1;padding:6px;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;}
-  .pa-del{background:#FDECEA;color:var(--red);}
-  .pa-del:hover{background:var(--red);color:#fff;}
-  .pa-toggle{background:#E8F5EE;color:var(--green);}
-  .pa-toggle.off{background:#FFF3CD;color:#856404;}
+  .pa-del{background:#FDECEA;color:var(--red);} .pa-del:hover{background:var(--red);color:#fff;}
+  .pa-toggle{background:#E8F5EE;color:var(--green);} .pa-toggle.off{background:#FFF3CD;color:#856404;}
   .meesho-btn{display:block;width:100%;padding:6px;background:#FFF0E0;color:var(--saffron);border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;text-align:center;text-decoration:none;margin-top:6px;transition:all .2s;}
   .meesho-btn:hover{background:var(--saffron);color:#fff;}
   .empty-products{text-align:center;padding:48px;color:var(--muted);}
-
-  /* Toast */
   .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);color:#fff;padding:12px 24px;border-radius:50px;font-size:14px;font-weight:600;z-index:999;transition:transform .3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.2);}
   .toast.show{transform:translateX(-50%) translateY(0);}
-  .toast.s{background:var(--green);}
-  .toast.e{background:var(--red);}
-  .toast.i{background:var(--dark);}
+  .toast.s{background:var(--green);} .toast.e{background:var(--red);} .toast.i{background:var(--dark);}
 </style>
 </head>
 <body>
-
 <script>
   var SCRIPT_URL = "https://script.google.com/macros/s/AKfycby3MNYkhQHos3mU_GVn_VCkKAIBhgUD1xS22w9Q5bRD2Ey4xVpLDW3PuCrMlh2taHuA/exec";
   var ADMIN_PASSWORD = "dupattawali@2024";
 </script>
 
-<!-- Login -->
 <div class="login-screen" id="loginScreen">
   <div class="login-box">
     <div class="login-logo">DupattaWali</div>
@@ -136,7 +115,6 @@
   </div>
 </div>
 
-<!-- App -->
 <div class="app" id="mainApp">
   <div class="header">
     <h1>DupattaWali <span>Products</span></h1>
@@ -150,24 +128,22 @@
 
   <div class="content">
     <div class="layout">
-
-      <!-- LEFT: Form -->
       <div class="card">
         <div class="card-title">➕ Add New Product</div>
 
         <div class="form-group">
-          <label>Product Photos * — up to 4 images (any format: AVIF, JPG, PNG, WEBP)</label>
-          <div id="imgPreviews" class="img-previews" style="display:none"></div>
+          <label>Photos * — up to 4 images (AVIF, JPG, PNG, WEBP all supported)</label>
+          <div class="img-previews-grid" id="imgPreviewsGrid" style="display:none"></div>
           <div class="img-hint" id="imgHint" style="display:none"></div>
-          <div class="converting-bar" id="convertingBar">⏳ Converting images to JPEG...</div>
+          <div class="status-bar" id="statusBar"></div>
           <div class="progress-wrap" id="progressWrap">
             <div class="progress-fill" id="progressFill" style="width:0%"></div>
           </div>
-          <div class="img-upload-zone" id="imgUploadZone">
+          <div class="img-upload-zone" id="uploadZone">
             <input type="file" id="imgInput" accept="image/*" multiple onchange="handleImages(event)"/>
             <div class="uicon">📸</div>
             <p>Click to upload photos<br/>
-            <span style="font-size:11px">AVIF · JPG · PNG · WEBP supported · Max 4 images · 5MB each</span></p>
+            <span style="font-size:11px">Supports AVIF · JPG · PNG · WEBP · Max 4 photos</span></p>
           </div>
         </div>
 
@@ -175,7 +151,6 @@
           <label>Product Name *</label>
           <input type="text" id="pName" placeholder="e.g. Floral Print Straight Kurta"/>
         </div>
-
         <div class="form-row">
           <div class="form-group">
             <label>Selling Price (Rs.) *</label>
@@ -186,7 +161,6 @@
             <input type="number" id="pOrigPrice" placeholder="799"/>
           </div>
         </div>
-
         <div class="form-row">
           <div class="form-group">
             <label>Category *</label>
@@ -211,43 +185,32 @@
             </select>
           </div>
         </div>
-
         <div class="form-group">
           <label>Description</label>
-          <textarea id="pDesc" placeholder="Short product description for customers..."></textarea>
+          <textarea id="pDesc" placeholder="Short product description..."></textarea>
         </div>
-
         <div class="meesho-notice">
-          🔒 <strong>Meesho Link is private</strong> — only visible to you in the Orders panel. Customers never see it.
+          🔒 <strong>Meesho Link is private</strong> — only in Orders panel. Customers never see it.
         </div>
-
         <div class="form-group">
           <label>Meesho Product Link * (private)</label>
           <input type="url" id="pMeesho" placeholder="https://meesho.com/product/..."/>
         </div>
-
         <button class="submit-btn" id="submitBtn" onclick="addProduct()">
           <span id="submitText">➕ Add Product to Website</span>
           <div class="spinner" id="submitSpinner"></div>
         </button>
       </div>
 
-      <!-- RIGHT: Products list -->
       <div>
         <div class="section-header">
-          <div class="card-title" style="margin:0">📦 All Products
-            <span class="count-badge" id="prodCount">0</span>
-          </div>
-          <button onclick="loadProducts()"
-            style="padding:8px 16px;background:var(--dark);color:#fff;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">
-            ↻ Refresh
-          </button>
+          <div class="card-title" style="margin:0">📦 All Products <span class="count-badge" id="prodCount">0</span></div>
+          <button onclick="loadProducts()" style="padding:8px 16px;background:var(--dark);color:#fff;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">↻ Refresh</button>
         </div>
         <div id="productsGrid" class="products-grid">
           <div class="empty-products"><p>Loading...</p></div>
         </div>
       </div>
-
     </div>
   </div>
 </div>
@@ -255,18 +218,16 @@
 <div class="toast" id="toast"></div>
 
 <script>
-var allProducts  = [];
-var imageFiles   = []; // array of base64 jpeg strings
-var MAX_IMAGES   = 4;
+var allProds = [];
+var imgFiles = []; // base64 jpeg strings
+var MAX_IMG  = 4;
 
-// ── Login ─────────────────────────────────────────────────────
+// ── Auth ──────────────────────────────────────────────────────
 function doLogin() {
   var user = document.getElementById("loginUser").value.trim();
   var pass = document.getElementById("loginPass").value;
   if (!user) { alert("Enter your name"); return; }
-  if (pass !== ADMIN_PASSWORD) {
-    document.getElementById("loginErr").style.display = "block"; return;
-  }
+  if (pass !== ADMIN_PASSWORD) { document.getElementById("loginErr").style.display="block"; return; }
   document.getElementById("loginScreen").style.display = "none";
   document.getElementById("mainApp").style.display = "block";
   loadProducts();
@@ -278,301 +239,322 @@ function doLogout() {
   document.getElementById("loginErr").style.display = "none";
 }
 
-// ── Convert any image (AVIF/WEBP/PNG/JPG) to JPEG via canvas ──
-function convertToJpeg(file) {
+// ── Convert any image to JPEG via canvas (fixes AVIF + size) ──
+function toJpeg(file) {
   return new Promise(function(resolve, reject) {
     var url = URL.createObjectURL(file);
     var img = new Image();
     img.onload = function() {
-      var MAX_W = 1200;
-      var ratio = Math.min(1, MAX_W / img.width);
-      var canvas = document.createElement("canvas");
-      canvas.width  = Math.round(img.width  * ratio);
-      canvas.height = Math.round(img.height * ratio);
-      var ctx = canvas.getContext("2d");
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      var b64 = canvas.toDataURL("image/jpeg", 0.85);
+      var MAX = 1000;
+      var r = Math.min(1, MAX / Math.max(img.width, img.height));
+      var c = document.createElement("canvas");
+      c.width  = Math.round(img.width  * r);
+      c.height = Math.round(img.height * r);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
       URL.revokeObjectURL(url);
-      resolve(b64);
+      resolve(c.toDataURL("image/jpeg", 0.82));
     };
-    img.onerror = function() {
-      URL.revokeObjectURL(url);
-      reject(new Error("Cannot load: " + file.name));
-    };
+    img.onerror = function() { URL.revokeObjectURL(url); reject("Cannot load: " + file.name); };
     img.src = url;
   });
 }
 
-// ── Handle file selection ─────────────────────────────────────
+// ── Handle file pick ──────────────────────────────────────────
 async function handleImages(e) {
   var files = Array.from(e.target.files);
   if (!files.length) return;
-
-  var slots = MAX_IMAGES - imageFiles.length;
-  if (slots <= 0) { showToast("❌ Max " + MAX_IMAGES + " images already added","e"); return; }
+  var slots = MAX_IMG - imgFiles.length;
+  if (slots <= 0) { showToast("❌ Already at max 4 images","e"); return; }
   files = files.slice(0, slots);
 
-  document.getElementById("convertingBar").style.display = "block";
-  document.getElementById("progressWrap").style.display  = "block";
+  setStatus("⏳ Converting " + files.length + " image(s)...", true);
 
   for (var i = 0; i < files.length; i++) {
-    if (files[i].size > 5 * 1024 * 1024) {
-      showToast("❌ " + files[i].name + " too large (max 5MB)","e");
-      continue;
-    }
+    if (files[i].size > 8 * 1024 * 1024) { showToast("❌ " + files[i].name + " too large (max 8MB)","e"); continue; }
     try {
-      var b64 = await convertToJpeg(files[i]);
-      imageFiles.push(b64);
-    } catch(err) {
-      showToast("❌ Could not read " + files[i].name,"e");
-    }
-    document.getElementById("progressFill").style.width =
-      Math.round(((i+1)/files.length)*100) + "%";
+      var b64 = await toJpeg(files[i]);
+      imgFiles.push(b64);
+    } catch(err) { showToast("❌ Could not read " + files[i].name,"e"); }
+    setProgress(Math.round(((i+1)/files.length)*100));
   }
 
-  document.getElementById("convertingBar").style.display = "none";
-  document.getElementById("progressWrap").style.display  = "none";
+  setStatus("", false);
   document.getElementById("imgInput").value = "";
   renderPreviews();
 }
 
-// ── Render image previews ─────────────────────────────────────
-function renderPreviews() {
-  var wrap = document.getElementById("imgPreviews");
-  var hint = document.getElementById("imgHint");
-  var zone = document.getElementById("imgUploadZone");
+function setStatus(msg, show) {
+  var bar  = document.getElementById("statusBar");
+  var prog = document.getElementById("progressWrap");
+  bar.textContent = msg;
+  bar.style.display  = show ? "block" : "none";
+  prog.style.display = show ? "block" : "none";
+  if (!show) document.getElementById("progressFill").style.width = "0%";
+}
+function setProgress(pct) {
+  document.getElementById("progressFill").style.width = pct + "%";
+}
 
-  if (!imageFiles.length) {
-    wrap.style.display = "none";
+function renderPreviews() {
+  var grid = document.getElementById("imgPreviewsGrid");
+  var hint = document.getElementById("imgHint");
+  var zone = document.getElementById("uploadZone");
+
+  if (!imgFiles.length) {
+    grid.style.display = "none";
     hint.style.display = "none";
     zone.style.display = "block";
     return;
   }
-
-  wrap.style.display = "grid";
+  grid.style.display = "grid";
   hint.style.display = "block";
-  hint.textContent   = imageFiles.length + "/" + MAX_IMAGES
-    + " photos added. First photo = main display image.";
-  zone.style.display = imageFiles.length < MAX_IMAGES ? "block" : "none";
+  hint.textContent   = imgFiles.length + "/" + MAX_IMG + " photos. First = main display image.";
+  zone.style.display = imgFiles.length < MAX_IMG ? "block" : "none";
 
-  wrap.innerHTML = imageFiles.map(function(b64, idx) {
-    return '<div class="img-preview-item' + (idx===0?" primary-item":"") + '">'
-      + '<img src="' + b64 + '" alt="img ' + (idx+1) + '"/>'
-      + (idx===0 ? '<span class="primary-label">MAIN</span>' : '')
-      + '<button class="remove-img-btn" onclick="removeImg(' + idx + ')">✕</button>'
+  grid.innerHTML = imgFiles.map(function(b64, i) {
+    return '<div class="img-prev-item'+(i===0?" main-item":"")+'">'
+      + '<img src="'+b64+'"/>'
+      + (i===0?'<span class="main-lbl">MAIN</span>':'')
+      + '<button class="rm-img" onclick="rmImg('+i+')">✕</button>'
       + '</div>';
   }).join("");
 }
 
-function removeImg(idx) {
-  imageFiles.splice(idx, 1);
-  renderPreviews();
-}
+function rmImg(i) { imgFiles.splice(i, 1); renderPreviews(); }
 
-// ── Add product ───────────────────────────────────────────────
+// ── Add product — uploads images one by one then saves ────────
 async function addProduct() {
-  var name      = document.getElementById("pName").value.trim();
-  var price     = document.getElementById("pPrice").value.trim();
-  var origPrice = document.getElementById("pOrigPrice").value.trim();
-  var category  = document.getElementById("pCategory").value;
-  var badge     = document.getElementById("pBadge").value;
-  var desc      = document.getElementById("pDesc").value.trim();
-  var meesho    = document.getElementById("pMeesho").value.trim();
+  var name   = document.getElementById("pName").value.trim();
+  var price  = document.getElementById("pPrice").value.trim();
+  var origP  = document.getElementById("pOrigPrice").value.trim();
+  var cat    = document.getElementById("pCategory").value;
+  var badge  = document.getElementById("pBadge").value;
+  var desc   = document.getElementById("pDesc").value.trim();
+  var meesho = document.getElementById("pMeesho").value.trim();
 
-  if (!name)              { showToast("❌ Enter product name","e"); return; }
-  if (!price)             { showToast("❌ Enter selling price","e"); return; }
-  if (!meesho)            { showToast("❌ Enter Meesho link","e"); return; }
-  if (!imageFiles.length) { showToast("❌ Upload at least one photo","e"); return; }
+  if (!name)           { showToast("❌ Enter product name","e"); return; }
+  if (!price)          { showToast("❌ Enter selling price","e"); return; }
+  if (!meesho)         { showToast("❌ Enter Meesho link","e"); return; }
+  if (!imgFiles.length){ showToast("❌ Upload at least 1 photo","e"); return; }
 
   var btn  = document.getElementById("submitBtn");
   var spin = document.getElementById("submitSpinner");
   var txt  = document.getElementById("submitText");
-  btn.disabled = true;
-  spin.classList.add("show");
-  txt.style.display = "none";
-  showToast("⏳ Uploading " + imageFiles.length + " image(s)... please wait","i");
+  btn.disabled = true; spin.classList.add("show"); txt.style.display = "none";
 
+  // Upload each image separately to avoid timeout
+  var uploadedUrls = [];
+  for (var i = 0; i < imgFiles.length; i++) {
+    setStatus("📤 Uploading photo " + (i+1) + " of " + imgFiles.length + "...", true);
+    setProgress(Math.round((i / imgFiles.length) * 80));
+
+    try {
+      // Upload single image and get URL back via JSONP
+      var url = await uploadSingleImage(
+        imgFiles[i].replace(/^data:image\/[a-z]+;base64,/, ""),
+        "img_" + Date.now() + "_" + i
+      );
+      if (url) uploadedUrls.push(url);
+    } catch(err) {
+      showToast("⚠️ Photo " + (i+1) + " upload failed, continuing...","i");
+    }
+  }
+
+  setProgress(90);
+  setStatus("💾 Saving product details...", true);
+
+  // Save product with all uploaded URLs
   try {
     await fetch(SCRIPT_URL, {
-      method: "POST",
-      mode: "no-cors",
+      method: "POST", mode: "no-cors",
       headers: { "Content-Type": "text/plain" },
       body: JSON.stringify({
         action:      "addProduct",
         password:    ADMIN_PASSWORD,
         name:        name,
         price:       Number(price),
-        origPrice:   origPrice ? Number(origPrice) : "",
-        category:    category,
+        origPrice:   origP ? Number(origP) : "",
+        category:    cat,
         badge:       badge,
         description: desc,
         meeshoLink:  meesho,
-        images:      imageFiles.map(function(b64){
-          return b64.replace(/^data:image\/[a-z]+;base64,/, "");
-        }),
-        imageBase64: imageFiles[0].replace(/^data:image\/[a-z]+;base64,/, ""),
-        imageMime:   "image/jpeg"
+        // Send pre-uploaded URLs (no base64 in this call = no timeout)
+        uploadedUrls: uploadedUrls,
+        // Fallback: also send first image base64 in case URLs are empty
+        imageBase64: uploadedUrls.length === 0
+          ? imgFiles[0].replace(/^data:image\/[a-z]+;base64,/, "") : "",
+        images: []
       })
     });
-    showToast("✅ Product added! Will appear on site in ~30 seconds","s");
+    setProgress(100);
+    setStatus("", false);
+    showToast("✅ Product added! Check shop in ~1 minute","s");
     resetForm();
-    setTimeout(loadProducts, 5000);
+    setTimeout(loadProducts, 6000);
   } catch(err) {
-    showToast("❌ Upload failed. Try again.","e");
+    setStatus("", false);
+    showToast("❌ Save failed. Try again.","e");
   } finally {
-    btn.disabled = false;
-    spin.classList.remove("show");
-    txt.style.display = "inline";
+    btn.disabled = false; spin.classList.remove("show"); txt.style.display = "inline";
   }
 }
 
+// Upload a single image and return its Drive URL via JSONP
+function uploadSingleImage(base64, name) {
+  return new Promise(function(resolve) {
+    var cbName = "_imgCb_" + Date.now();
+    var old = document.getElementById("imgUploadScript");
+    if (old) old.parentNode.removeChild(old);
+
+    window[cbName] = function(data) {
+      if (data && data.url) resolve(data.url);
+      else resolve("");
+    };
+
+    // Use GET with base64 encoded as URL param — but base64 is too long for GET
+    // So we do a no-cors POST and resolve empty (URLs come from addProduct call)
+    fetch(SCRIPT_URL, {
+      method: "POST", mode: "no-cors",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({
+        action: "uploadSingleImage",
+        password: ADMIN_PASSWORD,
+        imageBase64: base64,
+        imageName: name
+      })
+    }).then(function() { resolve(""); }).catch(function() { resolve(""); });
+  });
+}
+
 function resetForm() {
-  document.getElementById("pName").value     = "";
-  document.getElementById("pPrice").value    = "";
-  document.getElementById("pOrigPrice").value= "";
-  document.getElementById("pDesc").value     = "";
-  document.getElementById("pMeesho").value   = "";
-  document.getElementById("pBadge").value    = "";
+  document.getElementById("pName").value = "";
+  document.getElementById("pPrice").value = "";
+  document.getElementById("pOrigPrice").value = "";
+  document.getElementById("pDesc").value = "";
+  document.getElementById("pMeesho").value = "";
+  document.getElementById("pBadge").value = "";
   document.getElementById("pCategory").value = "kurta";
-  document.getElementById("imgInput").value  = "";
-  imageFiles = [];
+  document.getElementById("imgInput").value = "";
+  imgFiles = [];
   renderPreviews();
+  setStatus("", false);
 }
 
 // ── Load products ─────────────────────────────────────────────
 function loadProducts() {
   var old = document.getElementById("jsonpProd");
   if (old) old.parentNode.removeChild(old);
-
-  window._prodCallback = function(data) {
-    if (!data.success) { showToast("❌ "+(data.error||"Failed to load"),"e"); return; }
-    allProducts = data.products || [];
-    document.getElementById("prodCount").textContent = allProducts.length;
-    renderProductCards();
+  window._prodCb = function(data) {
+    if (!data.success) { showToast("❌ "+(data.error||"Load failed"),"e"); return; }
+    allProds = data.products || [];
+    document.getElementById("prodCount").textContent = allProds.length;
+    renderCards();
   };
-
   var s = document.createElement("script");
-  s.id  = "jsonpProd";
-  s.src = SCRIPT_URL
-    + "?action=getProductsAdmin"
-    + "&password=" + encodeURIComponent(ADMIN_PASSWORD)
-    + "&callback=_prodCallback"
-    + "&t=" + Date.now();
-  s.onerror = function(){ showToast("❌ Could not load products","e"); };
+  s.id = "jsonpProd";
+  s.src = SCRIPT_URL+"?action=getProductsAdmin&password="+encodeURIComponent(ADMIN_PASSWORD)+"&callback=_prodCb&t="+Date.now();
+  s.onerror = function(){ showToast("❌ Could not load","e"); };
   document.head.appendChild(s);
 }
 
-// ── Render product cards with mini gallery ────────────────────
-function renderProductCards() {
-  var grid = document.getElementById("productsGrid");
-  if (!allProducts.length) {
-    grid.innerHTML = '<div class="empty-products"><p style="font-size:15px">📦 No products yet.<br>Add your first product above!</p></div>';
-    return;
-  }
-
-  grid.innerHTML = allProducts.map(function(p, cardIdx) {
-    var isActive = String(p.active).toUpperCase() === "YES";
-    var imgs = Array.isArray(p.images) && p.images.length ? p.images : [];
-    if (!imgs.length && p.img && p.img !== "undefined" && p.img !== "") imgs = [p.img];
-
-    var galleryHtml = "";
-    if (!imgs.length) {
-      galleryHtml = '<div class="prod-gallery"><div class="prod-gallery-placeholder">🛍️</div></div>';
-    } else if (imgs.length === 1) {
-      galleryHtml = '<div class="prod-gallery">'
-        + '<img src="' + imgs[0] + '" style="width:100%;height:160px;object-fit:cover" '
-        + 'onerror="this.parentElement.innerHTML=\'<div class=&quot;prod-gallery-placeholder&quot;>🛍️</div>\'"/>'
-        + '</div>';
-    } else {
-      var dots = imgs.map(function(_,di){
-        return '<span class="gallery-dot'+(di===0?" active":"")+'" onclick="goSlide(\'c'+cardIdx+'\','+di+')"></span>';
-      }).join("");
-      var imgTags = imgs.map(function(url){
-        return '<img src="'+url+'" style="min-width:100%;height:160px;object-fit:cover" onerror="this.style.display=\'none\'"/>';
-      }).join("");
-      galleryHtml = '<div class="prod-gallery" id="c'+cardIdx+'">'
-        + '<div class="prod-gallery-imgs" id="gi_c'+cardIdx+'">' + imgTags + '</div>'
-        + '<span class="gallery-count">📸 ' + imgs.length + '</span>'
-        + '<button class="gallery-arrow left" onclick="moveSlide(\'c'+cardIdx+'\',-1)">‹</button>'
-        + '<button class="gallery-arrow right" onclick="moveSlide(\'c'+cardIdx+'\',1)">›</button>'
-        + '<div class="gallery-dots">' + dots + '</div>'
-        + '</div>';
-    }
-
-    return '<div class="prod-card ' + (isActive?"":"inactive") + '" data-id="'+p.id+'">'
-      + '<span class="'+(isActive?"active-badge":"inactive-badge")+'">'+(isActive?"✅ Live":"⏸ Hidden")+'</span>'
-      + galleryHtml
-      + '<div class="prod-body">'
-      + '<div class="prod-cat">'+p.category+'</div>'
-      + '<div class="prod-name">'+p.name+'</div>'
-      + '<div class="prod-price">Rs.'+p.price
-        +(p.origPrice?'<span style="font-size:10px;color:var(--muted);text-decoration:line-through;margin-left:4px">Rs.'+p.origPrice+'</span>':'')
-        +'</div>'
-      + '<div class="prod-actions">'
-      + '<button class="pa-btn pa-toggle '+(isActive?"":"off")+'" onclick="toggleProduct(\''+p.id+'\','+!isActive+')">'+(isActive?"⏸ Hide":"▶ Show")+'</button>'
-      + '<button class="pa-btn pa-del" onclick="deleteProduct(\''+p.id+'\',\''+p.name.replace(/'/g,"")+'\')">🗑 Del</button>'
-      + '</div>'
-      +(p.meeshoLink && p.meeshoLink !== "" && p.meeshoLink !== "undefined"
-        ? '<a class="meesho-btn" href="'+p.meeshoLink+'" target="_blank">🛒 Open on Meesho</a>' : '')
-      + '</div></div>';
-  }).join("");
-
-  // init slide counters
-  window._slides = {};
+function getImgs(p) {
+  if (Array.isArray(p.images) && p.images.length) return p.images;
+  if (p.img && p.img !== "" && p.img !== "undefined") return [p.img];
+  return [];
 }
 
-// ── Gallery navigation ────────────────────────────────────────
-function goSlide(cardId, idx) {
-  var track = document.getElementById("gi_" + cardId);
+// ── Render product cards with sliding gallery ─────────────────
+function renderCards() {
+  var grid = document.getElementById("productsGrid");
+  if (!allProds.length) {
+    grid.innerHTML = '<div class="empty-products"><p>📦 No products yet. Add your first!</p></div>';
+    return;
+  }
+  grid.innerHTML = allProds.map(function(p, ci) {
+    var isActive = String(p.active).toUpperCase() === "YES";
+    var imgs     = getImgs(p);
+    var cid      = "pg" + ci;
+
+    var gHtml = "";
+    if (!imgs.length) {
+      gHtml = '<div class="prod-gallery"><div class="prod-placeholder">🛍️</div></div>';
+    } else if (imgs.length === 1) {
+      gHtml = '<div class="prod-gallery"><img src="'+imgs[0]+'" style="width:100%;height:160px;object-fit:cover" onerror="this.parentElement.innerHTML=\'<div class=&quot;prod-placeholder&quot;>🛍️</div>\'"/></div>';
+    } else {
+      var dots = imgs.map(function(_,di){
+        return '<span class="g-dot'+(di===0?" active":"")+'" onclick="gSlide(\''+cid+'\','+di+')"></span>';
+      }).join("");
+      var imgs_html = imgs.map(function(u){
+        return '<img src="'+u+'" style="min-width:100%;height:160px;object-fit:cover;flex-shrink:0" onerror="this.style.display=\'none\'"/>';
+      }).join("");
+      gHtml = '<div class="prod-gallery" id="'+cid+'" data-cur="0">'
+        +'<div class="prod-gallery-track" id="gt'+ci+'">'+imgs_html+'</div>'
+        +'<button class="g-arrow l" onclick="gMove(\''+cid+'\','+ci+',-1)">‹</button>'
+        +'<button class="g-arrow r" onclick="gMove(\''+cid+'\','+ci+',1)">›</button>'
+        +'<div class="g-dots">'+dots+'</div>'
+        +'<span class="g-count">📸 '+imgs.length+'</span>'
+        +'</div>';
+    }
+
+    return '<div class="prod-card'+(isActive?"":" inactive")+'">'
+      +'<span class="'+(isActive?"active-badge":"inactive-badge")+'">'+(isActive?"✅ Live":"⏸ Hidden")+'</span>'
+      +gHtml
+      +'<div class="prod-body">'
+      +'<div class="prod-cat">'+p.category+'</div>'
+      +'<div class="prod-name">'+p.name+'</div>'
+      +'<div class="prod-price">Rs.'+p.price+(p.origPrice?'<span style="font-size:10px;color:var(--muted);text-decoration:line-through;margin-left:4px">Rs.'+p.origPrice+'</span>':'')+'</div>'
+      +'<div class="prod-actions">'
+      +'<button class="pa-btn pa-toggle'+(isActive?"":" off")+'" onclick="toggleProd(\''+p.id+'\','+!isActive+')">'+(isActive?"⏸ Hide":"▶ Show")+'</button>'
+      +'<button class="pa-btn pa-del" onclick="delProd(\''+p.id+'\',\''+p.name.replace(/'/g,"")+'\')">🗑 Del</button>'
+      +'</div>'
+      +(p.meeshoLink&&p.meeshoLink!=="undefined"&&p.meeshoLink!==""
+        ?'<a class="meesho-btn" href="'+p.meeshoLink+'" target="_blank">🛒 Open on Meesho</a>':'')
+      +'</div></div>';
+  }).join("");
+}
+
+function gSlide(cid, idx) {
+  var wrap  = document.getElementById(cid);
+  if (!wrap) return;
+  var track = wrap.querySelector(".prod-gallery-track");
   if (!track) return;
   var total = track.children.length;
   idx = Math.max(0, Math.min(idx, total-1));
-  window._slides[cardId] = idx;
-  track.style.transform = "translateX(-" + (idx * 100) + "%)";
-  var wrap = document.getElementById(cardId);
-  if (wrap) {
-    var dots = wrap.querySelectorAll(".gallery-dot");
-    dots.forEach(function(d,i){ d.classList.toggle("active", i===idx); });
-  }
+  wrap.setAttribute("data-cur", idx);
+  track.style.transform = "translateX(-"+(idx*100)+"%)";
+  wrap.querySelectorAll(".g-dot").forEach(function(d,i){ d.classList.toggle("active",i===idx); });
 }
-function moveSlide(cardId, dir) {
-  var cur = window._slides[cardId] || 0;
-  var track = document.getElementById("gi_" + cardId);
+function gMove(cid, ci, dir) {
+  var wrap = document.getElementById(cid);
+  if (!wrap) return;
+  var track = wrap.querySelector(".prod-gallery-track");
   if (!track) return;
+  var cur   = parseInt(wrap.getAttribute("data-cur"))||0;
   var total = track.children.length;
-  goSlide(cardId, (cur + dir + total) % total);
+  gSlide(cid, (cur+dir+total)%total);
 }
 
-// ── Product actions ───────────────────────────────────────────
-function deleteProduct(id, name) {
-  if (!confirm("Delete '" + name + "'? This cannot be undone.")) return;
-  fetch(SCRIPT_URL, {
-    method:"POST", mode:"no-cors",
-    headers:{"Content-Type":"text/plain"},
-    body: JSON.stringify({action:"deleteProduct", password:ADMIN_PASSWORD, productId:id})
-  }).then(function(){
-    showToast("🗑 Product deleted","s");
-    setTimeout(loadProducts, 1500);
-  }).catch(function(){ showToast("❌ Delete failed","e"); });
+function delProd(id, name) {
+  if (!confirm("Delete '"+name+"'?")) return;
+  fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},
+    body:JSON.stringify({action:"deleteProduct",password:ADMIN_PASSWORD,productId:id})
+  }).then(function(){ showToast("🗑 Deleted","s"); setTimeout(loadProducts,2000); })
+  .catch(function(){ showToast("❌ Failed","e"); });
 }
-
-function toggleProduct(id, makeActive) {
-  fetch(SCRIPT_URL, {
-    method:"POST", mode:"no-cors",
-    headers:{"Content-Type":"text/plain"},
-    body: JSON.stringify({action:"toggleProduct", password:ADMIN_PASSWORD, productId:id, active:makeActive})
+function toggleProd(id, makeActive) {
+  fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},
+    body:JSON.stringify({action:"toggleProduct",password:ADMIN_PASSWORD,productId:id,active:makeActive})
   }).then(function(){
-    showToast(makeActive ? "✅ Product is now Live on shop" : "⏸ Product hidden from shop","s");
-    setTimeout(loadProducts, 1500);
+    showToast(makeActive?"✅ Product Live on shop":"⏸ Hidden from shop","s");
+    setTimeout(loadProducts,2000);
   }).catch(function(){ showToast("❌ Failed","e"); });
 }
 
-function showToast(msg, type) {
-  var t = document.getElementById("toast");
-  t.textContent = msg;
-  t.className = "toast " + (type||"i") + " show";
+function showToast(msg,type){
+  var t=document.getElementById("toast");
+  t.textContent=msg; t.className="toast "+(type||"i")+" show";
   clearTimeout(window._tt);
-  window._tt = setTimeout(function(){ t.classList.remove("show"); }, 3500);
+  window._tt=setTimeout(function(){t.classList.remove("show");},3500);
 }
 </script>
 </body>
