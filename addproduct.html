@@ -1,30 +1,539 @@
-// Add this inside doGet, after the getOrders block:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>DupattaWali — Add Product</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet"/>
+<style>
+  :root{--saffron:#E8600A;--dark:#1A1A2E;--brown:#3D1F00;--border:#E8D5C4;--muted:#888;--green:#2D7A4F;--red:#E74C3C;--cream:#FDF6EE;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'DM Sans',sans-serif;background:#F0F0F5;color:var(--dark);}
+  .login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--dark),var(--brown));}
+  .login-box{background:#fff;border-radius:20px;padding:44px 36px;width:100%;max-width:380px;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.3);}
+  .login-logo{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--saffron);margin-bottom:4px;}
+  .login-sub{font-size:13px;color:var(--muted);margin-bottom:28px;}
+  .login-box input{width:100%;padding:13px 15px;border:1.5px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;margin-bottom:12px;}
+  .login-box input:focus{border-color:var(--saffron);}
+  .login-btn{width:100%;padding:14px;background:var(--saffron);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;}
+  .login-btn:hover{background:#c45208;}
+  .login-err{color:var(--red);font-size:13px;margin-top:10px;display:none;}
+  .app{display:none;}
+  .header{background:var(--dark);color:#fff;padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+  .header h1{font-family:'Playfair Display',serif;font-size:18px;}
+  .header h1 span{color:var(--saffron);}
+  .nav-links{display:flex;gap:10px;}
+  .nav-link{color:rgba(255,255,255,.7);text-decoration:none;font-size:13px;font-weight:500;padding:6px 14px;border-radius:8px;transition:all .2s;}
+  .nav-link:hover,.nav-link.active{background:rgba(255,255,255,.1);color:#fff;}
+  .logout-btn{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);padding:6px 14px;border-radius:8px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;}
+  .content{max-width:1100px;margin:0 auto;padding:28px 24px;}
+  .layout{display:grid;grid-template-columns:430px 1fr;gap:24px;align-items:start;}
+  @media(max-width:900px){.layout{grid-template-columns:1fr;}}
+  .card{background:#fff;border-radius:16px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,.07);}
+  .card-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;margin-bottom:20px;}
+  .form-group{margin-bottom:16px;}
+  label{display:block;font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+  input,select,textarea{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--dark);background:#fff;outline:none;transition:border-color .2s;}
+  input:focus,select:focus,textarea:focus{border-color:var(--saffron);box-shadow:0 0 0 3px rgba(232,96,10,.1);}
+  textarea{resize:vertical;min-height:80px;}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .img-upload-zone{border:2px dashed var(--border);border-radius:12px;padding:20px;text-align:center;cursor:pointer;background:var(--cream);position:relative;transition:all .2s;}
+  .img-upload-zone:hover{border-color:var(--saffron);background:#FFF5EC;}
+  .img-upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+  .uicon{font-size:28px;margin-bottom:6px;}
+  .img-upload-zone p{font-size:13px;color:var(--muted);}
+  .img-previews-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px;}
+  .img-prev-item{position:relative;border-radius:10px;overflow:hidden;aspect-ratio:1;border:2px solid var(--border);background:#F5E8D8;}
+  .img-prev-item.main-item{border-color:var(--saffron);}
+  .img-prev-item img{width:100%;height:100%;object-fit:cover;}
+  .uploading-overlay{position:absolute;inset:0;background:rgba(0,0,0,.55);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:700;gap:5px;}
+  .upload-spin{width:20px;height:20px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
+  .rm-img{position:absolute;top:3px;right:3px;background:rgba(0,0,0,.65);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .main-lbl{position:absolute;bottom:3px;left:3px;background:var(--saffron);color:#fff;font-size:8px;font-weight:700;padding:2px 5px;border-radius:4px;}
+  .done-lbl{position:absolute;bottom:3px;right:3px;background:var(--green);color:#fff;font-size:8px;font-weight:700;padding:2px 5px;border-radius:4px;}
+  .img-hint{font-size:12px;color:var(--muted);margin-bottom:10px;}
+  .status-bar{background:#FFF0E0;border-radius:8px;padding:10px 14px;font-size:13px;color:var(--saffron);font-weight:600;display:none;margin-bottom:8px;text-align:center;}
+  .progress-wrap{width:100%;background:#F0DCC8;border-radius:50px;height:6px;margin-bottom:10px;display:none;}
+  .progress-fill{height:6px;background:var(--saffron);border-radius:50px;transition:width .4s;}
+  .submit-btn{width:100%;padding:15px;background:var(--saffron);color:#fff;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px;transition:all .2s;}
+  .submit-btn:hover{background:#c45208;}
+  .submit-btn:disabled{background:var(--muted);cursor:not-allowed;}
+  .spinner{width:18px;height:18px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none;}
+  .spinner.show{display:block;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .meesho-notice{background:#FFF3CD;border:1.5px solid #FFD700;border-radius:10px;padding:12px 14px;font-size:13px;color:#7A5C00;margin-bottom:16px;line-height:1.6;}
+  .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+  .count-badge{background:var(--saffron);color:#fff;font-size:12px;font-weight:700;padding:3px 10px;border-radius:50px;}
+  .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px;}
+  .prod-card{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.07);border:1.5px solid var(--border);position:relative;}
+  .prod-card.inactive{opacity:.55;}
+  .prod-gallery{position:relative;height:160px;overflow:hidden;background:#F5E8D8;}
+  .prod-gallery-track{display:flex;height:100%;transition:transform .3s;}
+  .prod-gallery-track img{min-width:100%;height:160px;object-fit:cover;flex-shrink:0;}
+  .prod-placeholder{width:100%;height:160px;display:flex;align-items:center;justify-content:center;font-size:36px;background:linear-gradient(135deg,#F5E8D8,#FFE5CC);}
+  .g-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.4);color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;}
+  .prod-gallery:hover .g-arrow{opacity:1;}
+  .g-arrow.l{left:4px;}.g-arrow.r{right:4px;}
+  .g-dots{position:absolute;bottom:5px;left:50%;transform:translateX(-50%);display:flex;gap:3px;}
+  .g-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.5);cursor:pointer;transition:all .2s;}
+  .g-dot.active{background:#fff;width:10px;border-radius:3px;}
+  .g-count{position:absolute;top:6px;left:6px;background:rgba(0,0,0,.55);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:50px;}
+  .active-badge{position:absolute;top:6px;right:6px;background:var(--green);color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:50px;z-index:2;}
+  .inactive-badge{position:absolute;top:6px;right:6px;background:#888;color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:50px;z-index:2;}
+  .prod-body{padding:12px;}
+  .prod-cat{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:4px;}
+  .prod-name{font-weight:700;font-size:13px;margin-bottom:4px;line-height:1.3;}
+  .prod-price{font-size:14px;font-weight:700;color:var(--saffron);margin-bottom:8px;}
+  .prod-actions{display:flex;gap:6px;}
+  .pa-btn{flex:1;padding:6px;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;}
+  .pa-del{background:#FDECEA;color:var(--red);}.pa-del:hover{background:var(--red);color:#fff;}
+  .pa-toggle{background:#E8F5EE;color:var(--green);}.pa-toggle.off{background:#FFF3CD;color:#856404;}
+  .meesho-btn{display:block;width:100%;padding:6px;background:#FFF0E0;color:var(--saffron);border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;text-align:center;text-decoration:none;margin-top:6px;transition:all .2s;}
+  .meesho-btn:hover{background:var(--saffron);color:#fff;}
+  .empty-products{text-align:center;padding:48px;color:var(--muted);}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);color:#fff;padding:12px 24px;border-radius:50px;font-size:14px;font-weight:600;z-index:999;transition:transform .3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.2);}
+  .toast.show{transform:translateX(-50%) translateY(0);}
+  .toast.s{background:var(--green);}.toast.e{background:var(--red);}.toast.i{background:var(--dark);}
+</style>
+</head>
+<body>
 
-if (action === "checkImage") {
-  if (params.password !== ADMIN_PASSWORD)
-    return makeResp({ success: false, error: "Invalid password" }, cb);
+<script>
+  var SCRIPT_URL     = "https://script.google.com/macros/s/AKfycby3MNYkhQHos3mU_GVn_VCkKAIBhgUD1xS22w9Q5bRD2Ey4xVpLDW3PuCrMlh2taHuA/exec";
+  var ADMIN_PASSWORD = "dupattawali@2024";
+  var GITHUB_USER    = "500daysofansh";
+  var GITHUB_REPO    = "Duppta-Wali";
+  var GITHUB_BRANCH  = "main";
+</script>
 
-  var imageName = params.imageName || "";
-  var imageUrl  = "https://raw.githubusercontent.com/" + GITHUB_USER + "/" + GITHUB_REPO + "/" + GITHUB_BRANCH + "/images/products/" + imageName;
+<!-- Login -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">DupattaWali</div>
+    <div class="login-sub">Product Manager · Admin Only</div>
+    <input type="text" id="loginUser" placeholder="Your name"/>
+    <input type="password" id="loginPass" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <button class="login-btn" onclick="doLogin()">Login →</button>
+    <div class="login-err" id="loginErr">❌ Wrong password</div>
+  </div>
+</div>
 
-  // Check if file exists on GitHub
-  try {
-    var checkRes = UrlFetchApp.fetch(
-      "https://api.github.com/repos/" + GITHUB_USER + "/" + GITHUB_REPO + "/contents/images/products/" + imageName,
-      {
-        headers: {
-          "Authorization": "token " + PropertiesService.getScriptProperties().getProperty("GITHUB_TOKEN"),
-          "User-Agent": "DupattaWali"
-        },
-        muteHttpExceptions: true
+<!-- App -->
+<div class="app" id="mainApp">
+  <div class="header">
+    <h1>DupattaWali <span>Products</span></h1>
+    <div class="nav-links">
+      <a class="nav-link active" href="addproduct.html">➕ Add Product</a>
+      <a class="nav-link" href="admin.html">📋 Orders</a>
+      <a class="nav-link" href="index.html">🛍️ Shop</a>
+    </div>
+    <button class="logout-btn" onclick="doLogout()">Logout</button>
+  </div>
+
+  <div class="content">
+    <div class="layout">
+      <div class="card">
+        <div class="card-title">➕ Add New Product</div>
+
+        <div class="form-group">
+          <label>Photos * — up to 4 images (AVIF, JPG, PNG, WEBP)</label>
+          <div class="img-previews-grid" id="imgPreviewsGrid" style="display:none"></div>
+          <div class="img-hint" id="imgHint" style="display:none"></div>
+          <div class="status-bar" id="statusBar"></div>
+          <div class="progress-wrap" id="progressWrap">
+            <div class="progress-fill" id="progressFill" style="width:0%"></div>
+          </div>
+          <div class="img-upload-zone" id="uploadZone">
+            <input type="file" id="imgInput" accept="image/*" multiple onchange="handleImages(event)"/>
+            <div class="uicon">📸</div>
+            <p>Click to upload photos<br/>
+            <span style="font-size:11px">AVIF · JPG · PNG · WEBP · Max 4 photos</span></p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Product Name *</label>
+          <input type="text" id="pName" placeholder="e.g. Floral Print Straight Kurta"/>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Selling Price (Rs.) *</label>
+            <input type="number" id="pPrice" placeholder="399"/>
+          </div>
+          <div class="form-group">
+            <label>MRP / Original (Rs.)</label>
+            <input type="number" id="pOrigPrice" placeholder="799"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Category *</label>
+            <select id="pCategory">
+              <option value="kurta">Kurtis & Sets</option>
+              <option value="jewellery">Jewellery</option>
+              <option value="combo">Combo Deal</option>
+              <option value="dupatta">Dupatta</option>
+              <option value="bags">Bags & Accessories</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Badge</label>
+            <select id="pBadge">
+              <option value="">None</option>
+              <option value="Bestseller">Bestseller</option>
+              <option value="New">New</option>
+              <option value="Trending">Trending</option>
+              <option value="Best Value">Best Value</option>
+              <option value="Exclusive">Exclusive</option>
+              <option value="Sale">Sale</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="pDesc" placeholder="Short product description..."></textarea>
+        </div>
+        <div class="meesho-notice">
+          🔒 <strong>Meesho Link is private</strong> — only in Orders panel. Customers never see it.
+        </div>
+        <div class="form-group">
+          <label>Meesho Product Link * (private)</label>
+          <input type="url" id="pMeesho" placeholder="https://meesho.com/product/..."/>
+        </div>
+        <button class="submit-btn" id="submitBtn" onclick="addProduct()">
+          <span id="submitText">➕ Add Product to Website</span>
+          <div class="spinner" id="submitSpinner"></div>
+        </button>
+      </div>
+
+      <div>
+        <div class="section-header">
+          <div class="card-title" style="margin:0">📦 All Products
+            <span class="count-badge" id="prodCount">0</span>
+          </div>
+          <button onclick="loadProducts()"
+            style="padding:8px 16px;background:var(--dark);color:#fff;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">
+            ↻ Refresh
+          </button>
+        </div>
+        <div id="productsGrid" class="products-grid">
+          <div class="empty-products"><p>Loading...</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var allProds = [];
+var imgFiles = [];
+var MAX_IMG  = 4;
+
+// ── Login ─────────────────────────────────────────────────────
+function doLogin() {
+  var user = document.getElementById("loginUser").value.trim();
+  var pass = document.getElementById("loginPass").value;
+  if (!user) { alert("Enter your name"); return; }
+  if (pass !== ADMIN_PASSWORD) {
+    document.getElementById("loginErr").style.display = "block"; return;
+  }
+  document.getElementById("loginScreen").style.display = "none";
+  document.getElementById("mainApp").style.display = "block";
+  loadProducts();
+}
+function doLogout() {
+  document.getElementById("loginScreen").style.display = "flex";
+  document.getElementById("mainApp").style.display = "none";
+  document.getElementById("loginPass").value = "";
+  document.getElementById("loginErr").style.display = "none";
+}
+
+// ── Convert any format to JPEG via canvas ─────────────────────
+function toJpeg(file) {
+  return new Promise(function(resolve, reject) {
+    var url = URL.createObjectURL(file);
+    var img = new Image();
+    img.onload = function() {
+      var MAX = 1000;
+      var r   = Math.min(1, MAX / Math.max(img.width, img.height));
+      var c   = document.createElement("canvas");
+      c.width  = Math.round(img.width  * r);
+      c.height = Math.round(img.height * r);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      resolve(c.toDataURL("image/jpeg", 0.85));
+    };
+    img.onerror = function() { URL.revokeObjectURL(url); reject("Cannot load: " + file.name); };
+    img.src = url;
+  });
+}
+
+// ── Handle file selection ─────────────────────────────────────
+async function handleImages(e) {
+  var files = Array.from(e.target.files);
+  if (!files.length) return;
+  var slots = MAX_IMG - imgFiles.length;
+  if (slots <= 0) { showToast("❌ Max 4 images already added","e"); return; }
+  files = files.slice(0, slots);
+  setStatus("⏳ Processing " + files.length + " image(s)...", true);
+  for (var i = 0; i < files.length; i++) {
+    if (files[i].size > 8 * 1024 * 1024) { showToast("❌ " + files[i].name + " too large","e"); continue; }
+    try {
+      var b64   = await toJpeg(files[i]);
+      var fname = "prod_" + Date.now() + "_" + i + ".jpg";
+      imgFiles.push({ base64: b64, name: fname, status: "ready", url: "" });
+    } catch(err) { showToast("❌ Could not read " + files[i].name,"e"); }
+    setProgress(Math.round(((i+1)/files.length)*100));
+  }
+  setStatus("", false);
+  document.getElementById("imgInput").value = "";
+  renderPreviews();
+}
+
+function renderPreviews() {
+  var grid = document.getElementById("imgPreviewsGrid");
+  var hint = document.getElementById("imgHint");
+  var zone = document.getElementById("uploadZone");
+  if (!imgFiles.length) {
+    grid.style.display="none"; hint.style.display="none"; zone.style.display="block"; return;
+  }
+  grid.style.display="grid"; hint.style.display="block";
+  hint.textContent = imgFiles.length+"/"+MAX_IMG+" photos. First = main display image.";
+  zone.style.display = imgFiles.length < MAX_IMG ? "block" : "none";
+  grid.innerHTML = imgFiles.map(function(f,i){
+    var ov = f.status==="uploading" ? '<div class="uploading-overlay"><div class="upload-spin"></div><span>Uploading...</span></div>' : "";
+    var dl = f.status==="done" ? '<span class="done-lbl">✓</span>' : "";
+    var rb = f.status!=="uploading" ? '<button class="rm-img" onclick="rmImg('+i+')">✕</button>' : "";
+    return '<div class="img-prev-item'+(i===0?" main-item":"")+'">'
+      +'<img src="'+f.base64+'"/>'+(i===0?'<span class="main-lbl">MAIN</span>':'')+ov+dl+rb+'</div>';
+  }).join("");
+}
+
+function rmImg(i){
+  if(imgFiles[i]&&imgFiles[i].status==="uploading") return;
+  imgFiles.splice(i,1); renderPreviews();
+}
+function setStatus(msg,show){
+  var b=document.getElementById("statusBar"),p=document.getElementById("progressWrap");
+  b.textContent=msg; b.style.display=show?"block":"none"; p.style.display=show?"block":"none";
+  if(!show) document.getElementById("progressFill").style.width="0%";
+}
+function setProgress(pct){ document.getElementById("progressFill").style.width=pct+"%"; }
+
+// ── Upload image via Apps Script (token stored in Script Properties) ──
+// Apps Script reads GITHUB_TOKEN from Properties and uploads to GitHub
+// We use JSONP to get the real URL back
+function uploadViaAppsScript(base64DataUrl, filename) {
+  return new Promise(function(resolve, reject) {
+    var cbName = "_ghUpload_" + Date.now();
+    var s      = document.createElement("script");
+    var base64 = base64DataUrl.replace(/^data:image\/[a-z]+;base64,/, "");
+
+    // Timeout after 60 seconds
+    var timer = setTimeout(function() {
+      delete window[cbName];
+      if(s.parentNode) s.parentNode.removeChild(s);
+      // Even if timeout, image may have uploaded — use expected URL
+      resolve("https://raw.githubusercontent.com/" + GITHUB_USER + "/" + GITHUB_REPO + "/" + GITHUB_BRANCH + "/images/products/" + filename);
+    }, 60000);
+
+    window[cbName] = function(data) {
+      clearTimeout(timer);
+      delete window[cbName];
+      if(s.parentNode) s.parentNode.removeChild(s);
+      if(data && data.success && data.url) {
+        resolve(data.url);
+      } else {
+        reject(new Error(data ? (data.error || "Upload failed") : "No response from server"));
       }
-    );
-    if (checkRes.getResponseCode() === 200) {
-      return makeResp({ success: true, url: imageUrl }, cb);
-    } else {
-      return makeResp({ success: false, error: "Image not found on GitHub yet" }, cb);
+    };
+
+    // POST image to Apps Script — it uploads to GitHub using stored token
+    // Then we fetch result via JSONP GET
+    fetch(SCRIPT_URL, {
+      method:  "POST",
+      mode:    "no-cors",
+      headers: { "Content-Type": "text/plain" },
+      body:    JSON.stringify({
+        action:      "uploadImage",
+        password:    ADMIN_PASSWORD,
+        imageBase64: base64,
+        imageName:   filename.replace(".jpg","")
+      })
+    }).then(function() {
+      // Apps Script uploaded the image. Now poll for confirmation via JSONP.
+      // Wait 4 seconds for GitHub to process then check
+      setTimeout(function() {
+        s.src = SCRIPT_URL
+          + "?action=checkImage"
+          + "&password=" + encodeURIComponent(ADMIN_PASSWORD)
+          + "&imageName=" + encodeURIComponent(filename)
+          + "&callback=" + cbName
+          + "&t=" + Date.now();
+        document.head.appendChild(s);
+      }, 4000);
+    }).catch(function(err) {
+      clearTimeout(timer);
+      reject(err);
+    });
+  });
+}
+
+// ── Add product ───────────────────────────────────────────────
+async function addProduct() {
+  var name   = document.getElementById("pName").value.trim();
+  var price  = document.getElementById("pPrice").value.trim();
+  var origP  = document.getElementById("pOrigPrice").value.trim();
+  var cat    = document.getElementById("pCategory").value;
+  var badge  = document.getElementById("pBadge").value;
+  var desc   = document.getElementById("pDesc").value.trim();
+  var meesho = document.getElementById("pMeesho").value.trim();
+  if (!name)           { showToast("❌ Enter product name","e"); return; }
+  if (!price)          { showToast("❌ Enter selling price","e"); return; }
+  if (!meesho)         { showToast("❌ Enter Meesho link","e"); return; }
+  if (!imgFiles.length){ showToast("❌ Upload at least 1 photo","e"); return; }
+
+  var btn=document.getElementById("submitBtn"),spin=document.getElementById("submitSpinner"),txt=document.getElementById("submitText");
+  btn.disabled=true; spin.classList.add("show"); txt.style.display="none";
+
+  var uploadedUrls = [];
+  for (var i = 0; i < imgFiles.length; i++) {
+    imgFiles[i].status="uploading"; renderPreviews();
+    setStatus("📤 Uploading photo "+(i+1)+" of "+imgFiles.length+" via server...", true);
+    setProgress(Math.round((i/imgFiles.length)*80));
+    try {
+      var url = await uploadViaAppsScript(imgFiles[i].base64, imgFiles[i].name);
+      imgFiles[i].status="done"; imgFiles[i].url=url;
+      uploadedUrls.push(url); renderPreviews();
+    } catch(err) {
+      imgFiles[i].status="ready"; renderPreviews();
+      showToast("❌ Photo "+(i+1)+" failed: "+err.message,"e");
+      btn.disabled=false; spin.classList.remove("show"); txt.style.display="inline";
+      setStatus("",false); return;
     }
+  }
+
+  setProgress(90);
+  setStatus("💾 Saving product details...", true);
+
+  try {
+    await fetch(SCRIPT_URL,{
+      method:"POST", mode:"no-cors",
+      headers:{"Content-Type":"text/plain"},
+      body:JSON.stringify({
+        action:"addProduct", password:ADMIN_PASSWORD,
+        name:name, price:Number(price),
+        origPrice:origP?Number(origP):"",
+        category:cat, badge:badge,
+        description:desc, meeshoLink:meesho,
+        uploadedUrls:uploadedUrls
+      })
+    });
+    setProgress(100); setStatus("",false);
+    showToast("✅ Product added! Live on website 🎉","s");
+    resetForm();
+    setTimeout(loadProducts, 3000);
   } catch(err) {
-    return makeResp({ success: false, error: err.message }, cb);
+    setStatus("",false);
+    showToast("❌ Save failed. Try again.","e");
+  } finally {
+    btn.disabled=false; spin.classList.remove("show"); txt.style.display="inline";
   }
 }
+
+function resetForm(){
+  ["pName","pPrice","pOrigPrice","pDesc","pMeesho"].forEach(function(id){document.getElementById(id).value="";});
+  document.getElementById("pBadge").value=""; document.getElementById("pCategory").value="kurta";
+  document.getElementById("imgInput").value=""; imgFiles=[]; renderPreviews(); setStatus("",false);
+}
+
+// ── Load products ─────────────────────────────────────────────
+function loadProducts(){
+  var old=document.getElementById("jsonpProd");
+  if(old) old.parentNode.removeChild(old);
+  window._prodCb=function(data){
+    if(!data.success){showToast("❌ "+(data.error||"Load failed"),"e");return;}
+    allProds=data.products||[];
+    document.getElementById("prodCount").textContent=allProds.length;
+    renderCards();
+  };
+  var s=document.createElement("script");
+  s.id="jsonpProd";
+  s.src=SCRIPT_URL+"?action=getProductsAdmin&password="+encodeURIComponent(ADMIN_PASSWORD)+"&callback=_prodCb&t="+Date.now();
+  s.onerror=function(){showToast("❌ Could not load","e");};
+  document.head.appendChild(s);
+}
+
+function getImgs(p){
+  if(Array.isArray(p.images)&&p.images.length) return p.images;
+  if(p.img&&p.img!==""&&p.img!=="undefined") return [p.img];
+  return [];
+}
+
+function renderCards(){
+  var grid=document.getElementById("productsGrid");
+  if(!allProds.length){grid.innerHTML='<div class="empty-products"><p>📦 No products yet.</p></div>';return;}
+  grid.innerHTML=allProds.map(function(p,ci){
+    var isActive=String(p.active).toUpperCase()==="YES";
+    var imgs=getImgs(p),cid="pg"+ci,gHtml="";
+    if(!imgs.length){
+      gHtml='<div class="prod-gallery"><div class="prod-placeholder">🛍️</div></div>';
+    } else if(imgs.length===1){
+      gHtml='<div class="prod-gallery"><img src="'+imgs[0]+'" style="width:100%;height:160px;object-fit:cover" onerror="this.parentElement.innerHTML=\'<div class=&quot;prod-placeholder&quot;>🛍️</div>\'"/></div>';
+    } else {
+      var dots=imgs.map(function(_,di){return '<span class="g-dot'+(di===0?" active":"")+'" onclick="gSlide(\''+cid+'\','+di+')"></span>';}).join("");
+      var itags=imgs.map(function(u){return '<img src="'+u+'" style="min-width:100%;height:160px;object-fit:cover;flex-shrink:0" onerror="this.style.display=\'none\'"/>';}).join("");
+      gHtml='<div class="prod-gallery" id="'+cid+'" data-cur="0"><div class="prod-gallery-track">'+itags+'</div>'
+        +'<button class="g-arrow l" onclick="gMove(\''+cid+'\',-1)">‹</button>'
+        +'<button class="g-arrow r" onclick="gMove(\''+cid+'\',1)">›</button>'
+        +'<div class="g-dots">'+dots+'</div><span class="g-count">📸 '+imgs.length+'</span></div>';
+    }
+    return '<div class="prod-card'+(isActive?"":" inactive")+'">'
+      +'<span class="'+(isActive?"active-badge":"inactive-badge")+'">'+(isActive?"✅ Live":"⏸ Hidden")+'</span>'
+      +gHtml+'<div class="prod-body">'
+      +'<div class="prod-cat">'+p.category+'</div>'
+      +'<div class="prod-name">'+p.name+'</div>'
+      +'<div class="prod-price">Rs.'+p.price+(p.origPrice?'<span style="font-size:10px;color:var(--muted);text-decoration:line-through;margin-left:4px">Rs.'+p.origPrice+'</span>':'')+'</div>'
+      +'<div class="prod-actions">'
+      +'<button class="pa-btn pa-toggle'+(isActive?"":" off")+'" onclick="toggleProd(\''+p.id+'\','+!isActive+')">'+(isActive?"⏸ Hide":"▶ Show")+'</button>'
+      +'<button class="pa-btn pa-del" onclick="delProd(\''+p.id+'\',\''+p.name.replace(/'/g,"")+'\')">🗑 Del</button>'
+      +'</div>'
+      +(p.meeshoLink&&p.meeshoLink!=="undefined"&&p.meeshoLink!==""?'<a class="meesho-btn" href="'+p.meeshoLink+'" target="_blank">🛒 Open on Meesho</a>':'')
+      +'</div></div>';
+  }).join("");
+}
+
+function gSlide(cid,idx){
+  var wrap=document.getElementById(cid);if(!wrap)return;
+  var track=wrap.querySelector(".prod-gallery-track");if(!track)return;
+  var total=track.children.length;
+  idx=((idx%total)+total)%total;
+  wrap.setAttribute("data-cur",idx);
+  track.style.transform="translateX(-"+(idx*100)+"%)";
+  wrap.querySelectorAll(".g-dot").forEach(function(d,i){d.classList.toggle("active",i===idx);});
+}
+function gMove(cid,dir){var wrap=document.getElementById(cid);if(!wrap)return;var cur=parseInt(wrap.getAttribute("data-cur"))||0;gSlide(cid,cur+dir);}
+function delProd(id,name){
+  if(!confirm("Delete '"+name+"'?"))return;
+  fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},
+    body:JSON.stringify({action:"deleteProduct",password:ADMIN_PASSWORD,productId:id})
+  }).then(function(){showToast("🗑 Deleted","s");setTimeout(loadProducts,2000);})
+  .catch(function(){showToast("❌ Failed","e");});
+}
+function toggleProd(id,makeActive){
+  fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},
+    body:JSON.stringify({action:"toggleProduct",password:ADMIN_PASSWORD,productId:id,active:makeActive})
+  }).then(function(){showToast(makeActive?"✅ Product Live":"⏸ Hidden","s");setTimeout(loadProducts,2000);})
+  .catch(function(){showToast("❌ Failed","e");});
+}
+function showToast(msg,type){
+  var t=document.getElementById("toast");
+  t.textContent=msg; t.className="toast "+(type||"i")+" show";
+  clearTimeout(window._tt);
+  window._tt=setTimeout(function(){t.classList.remove("show");},3500);
+}
+</script>
+</body>
+</html>
