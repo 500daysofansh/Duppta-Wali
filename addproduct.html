@@ -10,7 +10,7 @@
   *{margin:0;padding:0;box-sizing:border-box;}
   body{font-family:'DM Sans',sans-serif;background:#F0F0F5;color:var(--dark);}
   .login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--dark),var(--brown));}
-  .login-box{background:#fff;border-radius:20px;padding:44px 36px;width:100%;max-width:380px;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.3);}
+  .login-box{background:#fff;border-radius:20px;padding:44px 36px;width:100%;max-width:400px;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.3);}
   .login-logo{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--saffron);margin-bottom:4px;}
   .login-sub{font-size:13px;color:var(--muted);margin-bottom:28px;}
   .login-box input{width:100%;padding:13px 15px;border:1.5px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;margin-bottom:12px;}
@@ -37,24 +37,27 @@
   input:focus,select:focus,textarea:focus{border-color:var(--saffron);box-shadow:0 0 0 3px rgba(232,96,10,.1);}
   textarea{resize:vertical;min-height:80px;}
   .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-
-  /* Image upload */
+  .github-setup{background:#E8F4FD;border:1.5px solid #2980B9;border-radius:10px;padding:14px;margin-bottom:20px;font-size:13px;color:#1a5276;line-height:1.7;}
+  .github-setup strong{display:block;font-size:14px;margin-bottom:6px;color:#1a5276;}
+  .github-setup a{color:#2980B9;font-weight:600;}
   .img-upload-zone{border:2px dashed var(--border);border-radius:12px;padding:20px;text-align:center;cursor:pointer;background:var(--cream);position:relative;transition:all .2s;}
   .img-upload-zone:hover{border-color:var(--saffron);background:#FFF5EC;}
   .img-upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
   .uicon{font-size:28px;margin-bottom:6px;}
   .img-upload-zone p{font-size:13px;color:var(--muted);}
   .img-previews-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px;}
-  .img-prev-item{position:relative;border-radius:10px;overflow:hidden;aspect-ratio:1;border:2px solid var(--border);}
+  .img-prev-item{position:relative;border-radius:10px;overflow:hidden;aspect-ratio:1;border:2px solid var(--border);background:#F5E8D8;}
   .img-prev-item.main-item{border-color:var(--saffron);}
   .img-prev-item img{width:100%;height:100%;object-fit:cover;}
+  .uploading-overlay{position:absolute;inset:0;background:rgba(0,0,0,.55);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;gap:4px;}
+  .upload-spin{width:20px;height:20px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
   .rm-img{position:absolute;top:3px;right:3px;background:rgba(0,0,0,.65);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
   .main-lbl{position:absolute;bottom:3px;left:3px;background:var(--saffron);color:#fff;font-size:8px;font-weight:700;padding:2px 5px;border-radius:4px;}
+  .done-lbl{position:absolute;bottom:3px;right:3px;background:var(--green);color:#fff;font-size:8px;font-weight:700;padding:2px 5px;border-radius:4px;}
   .img-hint{font-size:12px;color:var(--muted);margin-bottom:10px;}
   .status-bar{background:#FFF0E0;border-radius:8px;padding:10px 14px;font-size:13px;color:var(--saffron);font-weight:600;display:none;margin-bottom:8px;text-align:center;}
   .progress-wrap{width:100%;background:#F0DCC8;border-radius:50px;height:6px;margin-bottom:10px;display:none;}
   .progress-fill{height:6px;background:var(--saffron);border-radius:50px;transition:width .4s;}
-
   .submit-btn{width:100%;padding:15px;background:var(--saffron);color:#fff;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px;transition:all .2s;}
   .submit-btn:hover{background:#c45208;}
   .submit-btn:disabled{background:var(--muted);cursor:not-allowed;}
@@ -62,8 +65,6 @@
   .spinner.show{display:block;}
   @keyframes spin{to{transform:rotate(360deg)}}
   .meesho-notice{background:#FFF3CD;border:1.5px solid #FFD700;border-radius:10px;padding:12px 14px;font-size:13px;color:#7A5C00;margin-bottom:16px;line-height:1.6;}
-
-  /* Products grid */
   .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
   .count-badge{background:var(--saffron);color:#fff;font-size:12px;font-weight:700;padding:3px 10px;border-radius:50px;}
   .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px;}
@@ -75,7 +76,7 @@
   .prod-placeholder{width:100%;height:160px;display:flex;align-items:center;justify-content:center;font-size:36px;background:linear-gradient(135deg,#F5E8D8,#FFE5CC);}
   .g-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.4);color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;}
   .prod-gallery:hover .g-arrow{opacity:1;}
-  .g-arrow.l{left:4px;} .g-arrow.r{right:4px;}
+  .g-arrow.l{left:4px;}.g-arrow.r{right:4px;}
   .g-dots{position:absolute;bottom:5px;left:50%;transform:translateX(-50%);display:flex;gap:3px;}
   .g-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.5);cursor:pointer;transition:all .2s;}
   .g-dot.active{background:#fff;width:10px;border-radius:3px;}
@@ -88,22 +89,30 @@
   .prod-price{font-size:14px;font-weight:700;color:var(--saffron);margin-bottom:8px;}
   .prod-actions{display:flex;gap:6px;}
   .pa-btn{flex:1;padding:6px;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;}
-  .pa-del{background:#FDECEA;color:var(--red);} .pa-del:hover{background:var(--red);color:#fff;}
-  .pa-toggle{background:#E8F5EE;color:var(--green);} .pa-toggle.off{background:#FFF3CD;color:#856404;}
+  .pa-del{background:#FDECEA;color:var(--red);}.pa-del:hover{background:var(--red);color:#fff;}
+  .pa-toggle{background:#E8F5EE;color:var(--green);}.pa-toggle.off{background:#FFF3CD;color:#856404;}
   .meesho-btn{display:block;width:100%;padding:6px;background:#FFF0E0;color:var(--saffron);border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;text-align:center;text-decoration:none;margin-top:6px;transition:all .2s;}
   .meesho-btn:hover{background:var(--saffron);color:#fff;}
   .empty-products{text-align:center;padding:48px;color:var(--muted);}
   .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);color:#fff;padding:12px 24px;border-radius:50px;font-size:14px;font-weight:600;z-index:999;transition:transform .3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.2);}
   .toast.show{transform:translateX(-50%) translateY(0);}
-  .toast.s{background:var(--green);} .toast.e{background:var(--red);} .toast.i{background:var(--dark);}
+  .toast.s{background:var(--green);}.toast.e{background:var(--red);}.toast.i{background:var(--dark);}
 </style>
 </head>
 <body>
+
 <script>
-  var SCRIPT_URL = "https://script.google.com/macros/s/AKfycby3MNYkhQHos3mU_GVn_VCkKAIBhgUD1xS22w9Q5bRD2Ey4xVpLDW3PuCrMlh2taHuA/exec";
+  var SCRIPT_URL     = "https://script.google.com/macros/s/AKfycby3MNYkhQHos3mU_GVn_VCkKAIBhgUD1xS22w9Q5bRD2Ey4xVpLDW3PuCrMlh2taHuA/exec";
   var ADMIN_PASSWORD = "dupattawali@2024";
+
+  // ── GitHub Config — fill these in ──────────────────────────
+  var GITHUB_TOKEN = "";        // paste your token here
+  var GITHUB_USER  = "";        // your GitHub username e.g. "anshuman123"
+  var GITHUB_REPO  = "";        // your repo name e.g. "dupattawali"
+  var GITHUB_BRANCH = "main";   // usually "main"
 </script>
 
+<!-- Login -->
 <div class="login-screen" id="loginScreen">
   <div class="login-box">
     <div class="login-logo">DupattaWali</div>
@@ -115,6 +124,7 @@
   </div>
 </div>
 
+<!-- App -->
 <div class="app" id="mainApp">
   <div class="header">
     <h1>DupattaWali <span>Products</span></h1>
@@ -128,11 +138,22 @@
 
   <div class="content">
     <div class="layout">
+
+      <!-- LEFT: Form -->
       <div class="card">
         <div class="card-title">➕ Add New Product</div>
 
+        <!-- GitHub Setup Notice -->
+        <div class="github-setup" id="githubSetupNotice">
+          <strong>⚙️ One-time GitHub setup needed</strong>
+          Open this file, find the script at top, and fill in:<br/>
+          <code>GITHUB_TOKEN</code> · <code>GITHUB_USER</code> · <code>GITHUB_REPO</code><br/>
+          <a href="https://github.com/settings/tokens/new" target="_blank">Get token here →</a>
+          (check only the <strong>repo</strong> scope)
+        </div>
+
         <div class="form-group">
-          <label>Photos * — up to 4 images (AVIF, JPG, PNG, WEBP all supported)</label>
+          <label>Product Photos * — up to 4 images (AVIF, JPG, PNG, WEBP)</label>
           <div class="img-previews-grid" id="imgPreviewsGrid" style="display:none"></div>
           <div class="img-hint" id="imgHint" style="display:none"></div>
           <div class="status-bar" id="statusBar"></div>
@@ -143,7 +164,7 @@
             <input type="file" id="imgInput" accept="image/*" multiple onchange="handleImages(event)"/>
             <div class="uicon">📸</div>
             <p>Click to upload photos<br/>
-            <span style="font-size:11px">Supports AVIF · JPG · PNG · WEBP · Max 4 photos</span></p>
+            <span style="font-size:11px">AVIF · JPG · PNG · WEBP · Max 4 photos</span></p>
           </div>
         </div>
 
@@ -202,15 +223,22 @@
         </button>
       </div>
 
+      <!-- RIGHT: Products list -->
       <div>
         <div class="section-header">
-          <div class="card-title" style="margin:0">📦 All Products <span class="count-badge" id="prodCount">0</span></div>
-          <button onclick="loadProducts()" style="padding:8px 16px;background:var(--dark);color:#fff;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">↻ Refresh</button>
+          <div class="card-title" style="margin:0">📦 All Products
+            <span class="count-badge" id="prodCount">0</span>
+          </div>
+          <button onclick="loadProducts()"
+            style="padding:8px 16px;background:var(--dark);color:#fff;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">
+            ↻ Refresh
+          </button>
         </div>
         <div id="productsGrid" class="products-grid">
           <div class="empty-products"><p>Loading...</p></div>
         </div>
       </div>
+
     </div>
   </div>
 </div>
@@ -219,7 +247,7 @@
 
 <script>
 var allProds = [];
-var imgFiles = []; // base64 jpeg strings
+var imgFiles = [];   // {base64, name, url, status}
 var MAX_IMG  = 4;
 
 // ── Auth ──────────────────────────────────────────────────────
@@ -227,9 +255,15 @@ function doLogin() {
   var user = document.getElementById("loginUser").value.trim();
   var pass = document.getElementById("loginPass").value;
   if (!user) { alert("Enter your name"); return; }
-  if (pass !== ADMIN_PASSWORD) { document.getElementById("loginErr").style.display="block"; return; }
+  if (pass !== ADMIN_PASSWORD) {
+    document.getElementById("loginErr").style.display = "block"; return;
+  }
   document.getElementById("loginScreen").style.display = "none";
   document.getElementById("mainApp").style.display = "block";
+  // Hide setup notice if config is filled
+  if (GITHUB_TOKEN && GITHUB_USER && GITHUB_REPO) {
+    document.getElementById("githubSetupNotice").style.display = "none";
+  }
   loadProducts();
 }
 function doLogout() {
@@ -239,60 +273,87 @@ function doLogout() {
   document.getElementById("loginErr").style.display = "none";
 }
 
-// ── Convert any image to JPEG via canvas (fixes AVIF + size) ──
+// ── Convert any format to JPEG via canvas ─────────────────────
 function toJpeg(file) {
   return new Promise(function(resolve, reject) {
     var url = URL.createObjectURL(file);
     var img = new Image();
     img.onload = function() {
       var MAX = 1000;
-      var r = Math.min(1, MAX / Math.max(img.width, img.height));
-      var c = document.createElement("canvas");
+      var r   = Math.min(1, MAX / Math.max(img.width, img.height));
+      var c   = document.createElement("canvas");
       c.width  = Math.round(img.width  * r);
       c.height = Math.round(img.height * r);
       c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
       URL.revokeObjectURL(url);
-      resolve(c.toDataURL("image/jpeg", 0.82));
+      resolve(c.toDataURL("image/jpeg", 0.85));
     };
     img.onerror = function() { URL.revokeObjectURL(url); reject("Cannot load: " + file.name); };
     img.src = url;
   });
 }
 
-// ── Handle file pick ──────────────────────────────────────────
+// ── Upload ONE image to GitHub repo ──────────────────────────
+async function uploadToGitHub(base64DataUrl, filename) {
+  if (!GITHUB_TOKEN || !GITHUB_USER || !GITHUB_REPO) {
+    throw new Error("GitHub config not set. Fill GITHUB_TOKEN, GITHUB_USER, GITHUB_REPO in the script.");
+  }
+  // Strip the data:image/jpeg;base64, prefix
+  var base64 = base64DataUrl.replace(/^data:image\/[a-z]+;base64,/, "");
+  var path    = "images/products/" + filename;
+  var apiUrl  = "https://api.github.com/repos/" + GITHUB_USER + "/" + GITHUB_REPO + "/contents/" + path;
+
+  var res = await fetch(apiUrl, {
+    method: "PUT",
+    headers: {
+      "Authorization": "token " + GITHUB_TOKEN,
+      "Content-Type":  "application/json"
+    },
+    body: JSON.stringify({
+      message: "Add product image: " + filename,
+      content: base64,
+      branch:  GITHUB_BRANCH
+    })
+  });
+
+  if (!res.ok) {
+    var err = await res.json();
+    throw new Error(err.message || "GitHub upload failed");
+  }
+
+  // Return the raw GitHub Pages URL
+  var rawUrl = "https://" + GITHUB_USER + ".github.io/" + GITHUB_REPO + "/" + path;
+  return rawUrl;
+}
+
+// ── Handle file selection ─────────────────────────────────────
 async function handleImages(e) {
   var files = Array.from(e.target.files);
   if (!files.length) return;
   var slots = MAX_IMG - imgFiles.length;
-  if (slots <= 0) { showToast("❌ Already at max 4 images","e"); return; }
+  if (slots <= 0) { showToast("❌ Max 4 images already added","e"); return; }
   files = files.slice(0, slots);
 
-  setStatus("⏳ Converting " + files.length + " image(s)...", true);
+  setStatus("⏳ Processing " + files.length + " image(s)...", true);
 
   for (var i = 0; i < files.length; i++) {
-    if (files[i].size > 8 * 1024 * 1024) { showToast("❌ " + files[i].name + " too large (max 8MB)","e"); continue; }
+    if (files[i].size > 8 * 1024 * 1024) {
+      showToast("❌ " + files[i].name + " too large (max 8MB)","e");
+      continue;
+    }
     try {
       var b64 = await toJpeg(files[i]);
-      imgFiles.push(b64);
-    } catch(err) { showToast("❌ Could not read " + files[i].name,"e"); }
+      var fname = "prod_" + Date.now() + "_" + i + ".jpg";
+      imgFiles.push({ base64: b64, name: fname, url: "", status: "ready" });
+    } catch(err) {
+      showToast("❌ Could not read " + files[i].name,"e");
+    }
     setProgress(Math.round(((i+1)/files.length)*100));
   }
 
   setStatus("", false);
   document.getElementById("imgInput").value = "";
   renderPreviews();
-}
-
-function setStatus(msg, show) {
-  var bar  = document.getElementById("statusBar");
-  var prog = document.getElementById("progressWrap");
-  bar.textContent = msg;
-  bar.style.display  = show ? "block" : "none";
-  prog.style.display = show ? "block" : "none";
-  if (!show) document.getElementById("progressFill").style.width = "0%";
-}
-function setProgress(pct) {
-  document.getElementById("progressFill").style.width = pct + "%";
 }
 
 function renderPreviews() {
@@ -311,18 +372,41 @@ function renderPreviews() {
   hint.textContent   = imgFiles.length + "/" + MAX_IMG + " photos. First = main display image.";
   zone.style.display = imgFiles.length < MAX_IMG ? "block" : "none";
 
-  grid.innerHTML = imgFiles.map(function(b64, i) {
+  grid.innerHTML = imgFiles.map(function(f, i) {
+    var overlay = f.status === "uploading"
+      ? '<div class="uploading-overlay"><div class="upload-spin"></div><span>Uploading...</span></div>'
+      : "";
+    var doneLbl = f.status === "done"
+      ? '<span class="done-lbl">✓</span>' : "";
+    var rmBtn = f.status !== "uploading"
+      ? '<button class="rm-img" onclick="rmImg('+i+')">✕</button>' : "";
     return '<div class="img-prev-item'+(i===0?" main-item":"")+'">'
-      + '<img src="'+b64+'"/>'
-      + (i===0?'<span class="main-lbl">MAIN</span>':'')
-      + '<button class="rm-img" onclick="rmImg('+i+')">✕</button>'
+      + '<img src="'+f.base64+'"/>'
+      + (i===0 ? '<span class="main-lbl">MAIN</span>' : '')
+      + overlay + doneLbl + rmBtn
       + '</div>';
   }).join("");
 }
 
-function rmImg(i) { imgFiles.splice(i, 1); renderPreviews(); }
+function rmImg(i) {
+  if (imgFiles[i] && imgFiles[i].status === "uploading") return;
+  imgFiles.splice(i, 1);
+  renderPreviews();
+}
 
-// ── Add product — uploads images one by one then saves ────────
+function setStatus(msg, show) {
+  var bar  = document.getElementById("statusBar");
+  var prog = document.getElementById("progressWrap");
+  bar.textContent   = msg;
+  bar.style.display = show ? "block" : "none";
+  prog.style.display = show ? "block" : "none";
+  if (!show) document.getElementById("progressFill").style.width = "0%";
+}
+function setProgress(pct) {
+  document.getElementById("progressFill").style.width = pct + "%";
+}
+
+// ── Add product ───────────────────────────────────────────────
 async function addProduct() {
   var name   = document.getElementById("pName").value.trim();
   var price  = document.getElementById("pPrice").value.trim();
@@ -336,111 +420,90 @@ async function addProduct() {
   if (!price)          { showToast("❌ Enter selling price","e"); return; }
   if (!meesho)         { showToast("❌ Enter Meesho link","e"); return; }
   if (!imgFiles.length){ showToast("❌ Upload at least 1 photo","e"); return; }
+  if (!GITHUB_TOKEN || !GITHUB_USER || !GITHUB_REPO) {
+    showToast("❌ Fill GitHub config at top of file","e"); return;
+  }
 
   var btn  = document.getElementById("submitBtn");
   var spin = document.getElementById("submitSpinner");
   var txt  = document.getElementById("submitText");
   btn.disabled = true; spin.classList.add("show"); txt.style.display = "none";
 
-  // Upload each image separately to avoid timeout
+  // Step 1: Upload each image to GitHub
   var uploadedUrls = [];
   for (var i = 0; i < imgFiles.length; i++) {
-    setStatus("📤 Uploading photo " + (i+1) + " of " + imgFiles.length + "...", true);
+    imgFiles[i].status = "uploading";
+    renderPreviews();
+    setStatus("📤 Uploading photo " + (i+1) + " of " + imgFiles.length + " to GitHub...", true);
     setProgress(Math.round((i / imgFiles.length) * 80));
 
     try {
-      // Upload single image and get URL back via JSONP
-      var url = await uploadSingleImage(
-        imgFiles[i].replace(/^data:image\/[a-z]+;base64,/, ""),
-        "img_" + Date.now() + "_" + i
-      );
-      if (url) uploadedUrls.push(url);
+      var url = await uploadToGitHub(imgFiles[i].base64, imgFiles[i].name);
+      imgFiles[i].url    = url;
+      imgFiles[i].status = "done";
+      uploadedUrls.push(url);
+      renderPreviews();
     } catch(err) {
-      showToast("⚠️ Photo " + (i+1) + " upload failed, continuing...","i");
+      imgFiles[i].status = "ready";
+      renderPreviews();
+      showToast("❌ Photo " + (i+1) + " failed: " + err.message,"e");
+      btn.disabled = false; spin.classList.remove("show"); txt.style.display = "inline";
+      setStatus("", false);
+      return;
     }
   }
 
+  // Step 2: Save product to Google Sheet via Apps Script
   setProgress(90);
-  setStatus("💾 Saving product details...", true);
+  setStatus("💾 Saving product to website...", true);
 
-  // Save product with all uploaded URLs
   try {
     await fetch(SCRIPT_URL, {
       method: "POST", mode: "no-cors",
       headers: { "Content-Type": "text/plain" },
       body: JSON.stringify({
-        action:      "addProduct",
-        password:    ADMIN_PASSWORD,
-        name:        name,
-        price:       Number(price),
-        origPrice:   origP ? Number(origP) : "",
-        category:    cat,
-        badge:       badge,
-        description: desc,
-        meeshoLink:  meesho,
-        // Send pre-uploaded URLs (no base64 in this call = no timeout)
+        action:       "addProduct",
+        password:     ADMIN_PASSWORD,
+        name:         name,
+        price:        Number(price),
+        origPrice:    origP ? Number(origP) : "",
+        category:     cat,
+        badge:        badge,
+        description:  desc,
+        meeshoLink:   meesho,
         uploadedUrls: uploadedUrls,
-        // Fallback: also send first image base64 in case URLs are empty
-        imageBase64: uploadedUrls.length === 0
-          ? imgFiles[0].replace(/^data:image\/[a-z]+;base64,/, "") : "",
-        images: []
+        images:       [],
+        imageBase64:  ""
       })
     });
     setProgress(100);
     setStatus("", false);
-    showToast("✅ Product added! Check shop in ~1 minute","s");
+    showToast("✅ Product added! Images loading on site now 🎉","s");
     resetForm();
-    setTimeout(loadProducts, 6000);
+    setTimeout(loadProducts, 3000);
   } catch(err) {
     setStatus("", false);
-    showToast("❌ Save failed. Try again.","e");
+    showToast("❌ Sheet save failed. Try again.","e");
   } finally {
     btn.disabled = false; spin.classList.remove("show"); txt.style.display = "inline";
   }
 }
 
-// Upload a single image and return its Drive URL via JSONP
-function uploadSingleImage(base64, name) {
-  return new Promise(function(resolve) {
-    var cbName = "_imgCb_" + Date.now();
-    var old = document.getElementById("imgUploadScript");
-    if (old) old.parentNode.removeChild(old);
-
-    window[cbName] = function(data) {
-      if (data && data.url) resolve(data.url);
-      else resolve("");
-    };
-
-    // Use GET with base64 encoded as URL param — but base64 is too long for GET
-    // So we do a no-cors POST and resolve empty (URLs come from addProduct call)
-    fetch(SCRIPT_URL, {
-      method: "POST", mode: "no-cors",
-      headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify({
-        action: "uploadSingleImage",
-        password: ADMIN_PASSWORD,
-        imageBase64: base64,
-        imageName: name
-      })
-    }).then(function() { resolve(""); }).catch(function() { resolve(""); });
-  });
-}
-
 function resetForm() {
-  document.getElementById("pName").value = "";
-  document.getElementById("pPrice").value = "";
+  document.getElementById("pName").value      = "";
+  document.getElementById("pPrice").value     = "";
   document.getElementById("pOrigPrice").value = "";
-  document.getElementById("pDesc").value = "";
-  document.getElementById("pMeesho").value = "";
-  document.getElementById("pBadge").value = "";
-  document.getElementById("pCategory").value = "kurta";
-  document.getElementById("imgInput").value = "";
+  document.getElementById("pDesc").value      = "";
+  document.getElementById("pMeesho").value    = "";
+  document.getElementById("pBadge").value     = "";
+  document.getElementById("pCategory").value  = "kurta";
+  document.getElementById("imgInput").value   = "";
   imgFiles = [];
   renderPreviews();
   setStatus("", false);
 }
 
-// ── Load products ─────────────────────────────────────────────
+// ── Load products (admin view) ────────────────────────────────
 function loadProducts() {
   var old = document.getElementById("jsonpProd");
   if (old) old.parentNode.removeChild(old);
@@ -451,7 +514,7 @@ function loadProducts() {
     renderCards();
   };
   var s = document.createElement("script");
-  s.id = "jsonpProd";
+  s.id  = "jsonpProd";
   s.src = SCRIPT_URL+"?action=getProductsAdmin&password="+encodeURIComponent(ADMIN_PASSWORD)+"&callback=_prodCb&t="+Date.now();
   s.onerror = function(){ showToast("❌ Could not load","e"); };
   document.head.appendChild(s);
@@ -463,7 +526,7 @@ function getImgs(p) {
   return [];
 }
 
-// ── Render product cards with sliding gallery ─────────────────
+// ── Render cards with mini gallery ────────────────────────────
 function renderCards() {
   var grid = document.getElementById("productsGrid");
   if (!allProds.length) {
@@ -474,8 +537,8 @@ function renderCards() {
     var isActive = String(p.active).toUpperCase() === "YES";
     var imgs     = getImgs(p);
     var cid      = "pg" + ci;
+    var gHtml    = "";
 
-    var gHtml = "";
     if (!imgs.length) {
       gHtml = '<div class="prod-gallery"><div class="prod-placeholder">🛍️</div></div>';
     } else if (imgs.length === 1) {
@@ -484,13 +547,13 @@ function renderCards() {
       var dots = imgs.map(function(_,di){
         return '<span class="g-dot'+(di===0?" active":"")+'" onclick="gSlide(\''+cid+'\','+di+')"></span>';
       }).join("");
-      var imgs_html = imgs.map(function(u){
+      var imgTags = imgs.map(function(u){
         return '<img src="'+u+'" style="min-width:100%;height:160px;object-fit:cover;flex-shrink:0" onerror="this.style.display=\'none\'"/>';
       }).join("");
       gHtml = '<div class="prod-gallery" id="'+cid+'" data-cur="0">'
-        +'<div class="prod-gallery-track" id="gt'+ci+'">'+imgs_html+'</div>'
-        +'<button class="g-arrow l" onclick="gMove(\''+cid+'\','+ci+',-1)">‹</button>'
-        +'<button class="g-arrow r" onclick="gMove(\''+cid+'\','+ci+',1)">›</button>'
+        +'<div class="prod-gallery-track">'+imgTags+'</div>'
+        +'<button class="g-arrow l" onclick="gMove(\''+cid+'\',-1)">‹</button>'
+        +'<button class="g-arrow r" onclick="gMove(\''+cid+'\',1)">›</button>'
         +'<div class="g-dots">'+dots+'</div>'
         +'<span class="g-count">📸 '+imgs.length+'</span>'
         +'</div>';
@@ -507,8 +570,8 @@ function renderCards() {
       +'<button class="pa-btn pa-toggle'+(isActive?"":" off")+'" onclick="toggleProd(\''+p.id+'\','+!isActive+')">'+(isActive?"⏸ Hide":"▶ Show")+'</button>'
       +'<button class="pa-btn pa-del" onclick="delProd(\''+p.id+'\',\''+p.name.replace(/'/g,"")+'\')">🗑 Del</button>'
       +'</div>'
-      +(p.meeshoLink&&p.meeshoLink!=="undefined"&&p.meeshoLink!==""
-        ?'<a class="meesho-btn" href="'+p.meeshoLink+'" target="_blank">🛒 Open on Meesho</a>':'')
+      +(p.meeshoLink && p.meeshoLink !== "undefined" && p.meeshoLink !== ""
+        ? '<a class="meesho-btn" href="'+p.meeshoLink+'" target="_blank">🛒 Open on Meesho</a>' : '')
       +'</div></div>';
   }).join("");
 }
@@ -519,19 +582,18 @@ function gSlide(cid, idx) {
   var track = wrap.querySelector(".prod-gallery-track");
   if (!track) return;
   var total = track.children.length;
-  idx = Math.max(0, Math.min(idx, total-1));
+  idx = ((idx % total) + total) % total;
   wrap.setAttribute("data-cur", idx);
   track.style.transform = "translateX(-"+(idx*100)+"%)";
   wrap.querySelectorAll(".g-dot").forEach(function(d,i){ d.classList.toggle("active",i===idx); });
 }
-function gMove(cid, ci, dir) {
+function gMove(cid, dir) {
   var wrap = document.getElementById(cid);
   if (!wrap) return;
+  var cur   = parseInt(wrap.getAttribute("data-cur"))||0;
   var track = wrap.querySelector(".prod-gallery-track");
   if (!track) return;
-  var cur   = parseInt(wrap.getAttribute("data-cur"))||0;
-  var total = track.children.length;
-  gSlide(cid, (cur+dir+total)%total);
+  gSlide(cid, cur + dir);
 }
 
 function delProd(id, name) {
@@ -545,7 +607,7 @@ function toggleProd(id, makeActive) {
   fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},
     body:JSON.stringify({action:"toggleProduct",password:ADMIN_PASSWORD,productId:id,active:makeActive})
   }).then(function(){
-    showToast(makeActive?"✅ Product Live on shop":"⏸ Hidden from shop","s");
+    showToast(makeActive?"✅ Product Live":"⏸ Hidden from shop","s");
     setTimeout(loadProducts,2000);
   }).catch(function(){ showToast("❌ Failed","e"); });
 }
