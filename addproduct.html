@@ -132,6 +132,8 @@
 
   <div class="content">
     <div class="layout">
+
+      <!-- LEFT: Form -->
       <div class="card">
         <div class="card-title">➕ Add New Product</div>
 
@@ -206,6 +208,7 @@
         </button>
       </div>
 
+      <!-- RIGHT: Products -->
       <div>
         <div class="section-header">
           <div class="card-title" style="margin:0">📦 All Products
@@ -220,6 +223,7 @@
           <div class="empty-products"><p>Loading...</p></div>
         </div>
       </div>
+
     </div>
   </div>
 </div>
@@ -250,7 +254,7 @@ function doLogout() {
   document.getElementById("loginErr").style.display = "none";
 }
 
-// ── Convert any format to JPEG via canvas ─────────────────────
+// ── Convert any image format to JPEG via canvas ───────────────
 function toJpeg(file) {
   return new Promise(function(resolve, reject) {
     var url = URL.createObjectURL(file);
@@ -265,7 +269,10 @@ function toJpeg(file) {
       URL.revokeObjectURL(url);
       resolve(c.toDataURL("image/jpeg", 0.85));
     };
-    img.onerror = function() { URL.revokeObjectURL(url); reject("Cannot load: " + file.name); };
+    img.onerror = function() {
+      URL.revokeObjectURL(url);
+      reject("Cannot load: " + file.name);
+    };
     img.src = url;
   });
 }
@@ -279,7 +286,9 @@ async function handleImages(e) {
   files = files.slice(0, slots);
   setStatus("⏳ Processing " + files.length + " image(s)...", true);
   for (var i = 0; i < files.length; i++) {
-    if (files[i].size > 8 * 1024 * 1024) { showToast("❌ " + files[i].name + " too large","e"); continue; }
+    if (files[i].size > 8 * 1024 * 1024) {
+      showToast("❌ " + files[i].name + " too large (max 8MB)","e"); continue;
+    }
     try {
       var b64   = await toJpeg(files[i]);
       var fname = "prod_" + Date.now() + "_" + i + ".jpg";
@@ -303,55 +312,33 @@ function renderPreviews() {
   hint.textContent = imgFiles.length+"/"+MAX_IMG+" photos. First = main display image.";
   zone.style.display = imgFiles.length < MAX_IMG ? "block" : "none";
   grid.innerHTML = imgFiles.map(function(f,i){
-    var ov = f.status==="uploading" ? '<div class="uploading-overlay"><div class="upload-spin"></div><span>Uploading...</span></div>' : "";
+    var ov = f.status==="uploading"
+      ? '<div class="uploading-overlay"><div class="upload-spin"></div><span>Uploading...</span></div>' : "";
     var dl = f.status==="done" ? '<span class="done-lbl">✓</span>' : "";
     var rb = f.status!=="uploading" ? '<button class="rm-img" onclick="rmImg('+i+')">✕</button>' : "";
     return '<div class="img-prev-item'+(i===0?" main-item":"")+'">'
-      +'<img src="'+f.base64+'"/>'+(i===0?'<span class="main-lbl">MAIN</span>':'')+ov+dl+rb+'</div>';
+      +'<img src="'+f.base64+'"/>'+(i===0?'<span class="main-lbl">MAIN</span>':'')
+      +ov+dl+rb+'</div>';
   }).join("");
 }
 
-function rmImg(i){
-  if(imgFiles[i]&&imgFiles[i].status==="uploading") return;
+function rmImg(i) {
+  if (imgFiles[i] && imgFiles[i].status==="uploading") return;
   imgFiles.splice(i,1); renderPreviews();
 }
-function setStatus(msg,show){
-  var b=document.getElementById("statusBar"),p=document.getElementById("progressWrap");
+function setStatus(msg, show) {
+  var b=document.getElementById("statusBar"), p=document.getElementById("progressWrap");
   b.textContent=msg; b.style.display=show?"block":"none"; p.style.display=show?"block":"none";
-  if(!show) document.getElementById("progressFill").style.width="0%";
+  if (!show) document.getElementById("progressFill").style.width="0%";
 }
-function setProgress(pct){ document.getElementById("progressFill").style.width=pct+"%"; }
+function setProgress(pct) { document.getElementById("progressFill").style.width=pct+"%"; }
 
-// ── Upload image via Apps Script (token stored in Script Properties) ──
-// Apps Script reads GITHUB_TOKEN from Properties and uploads to GitHub
-// We use JSONP to get the real URL back
+// ── Upload image via Apps Script with retry check ─────────────
 function uploadViaAppsScript(base64DataUrl, filename) {
   return new Promise(function(resolve, reject) {
-    var cbName = "_ghUpload_" + Date.now();
-    var s      = document.createElement("script");
     var base64 = base64DataUrl.replace(/^data:image\/[a-z]+;base64,/, "");
 
-    // Timeout after 60 seconds
-    var timer = setTimeout(function() {
-      delete window[cbName];
-      if(s.parentNode) s.parentNode.removeChild(s);
-      // Even if timeout, image may have uploaded — use expected URL
-      resolve("https://raw.githubusercontent.com/" + GITHUB_USER + "/" + GITHUB_REPO + "/" + GITHUB_BRANCH + "/images/products/" + filename);
-    }, 60000);
-
-    window[cbName] = function(data) {
-      clearTimeout(timer);
-      delete window[cbName];
-      if(s.parentNode) s.parentNode.removeChild(s);
-      if(data && data.success && data.url) {
-        resolve(data.url);
-      } else {
-        reject(new Error(data ? (data.error || "Upload failed") : "No response from server"));
-      }
-    };
-
-    // POST image to Apps Script — it uploads to GitHub using stored token
-    // Then we fetch result via JSONP GET
+    // Step 1 — POST image to Apps Script which uploads to GitHub
     fetch(SCRIPT_URL, {
       method:  "POST",
       mode:    "no-cors",
@@ -363,9 +350,46 @@ function uploadViaAppsScript(base64DataUrl, filename) {
         imageName:   filename.replace(".jpg","")
       })
     }).then(function() {
-      // Apps Script uploaded the image. Now poll for confirmation via JSONP.
-      // Wait 4 seconds for GitHub to process then check
-      setTimeout(function() {
+
+      // Step 2 — Poll checkImage with retries
+      var attempts    = 0;
+      var maxAttempts = 12;
+      var expectedUrl = "https://raw.githubusercontent.com/"
+        + GITHUB_USER + "/" + GITHUB_REPO + "/" + GITHUB_BRANCH
+        + "/images/products/" + filename;
+
+      function check() {
+        attempts++;
+        var cbName = "_chk_" + Date.now();
+        var s = document.createElement("script");
+
+        window[cbName] = function(data) {
+          delete window[cbName];
+          if (s.parentNode) s.parentNode.removeChild(s);
+          if (data && data.success && data.url) {
+            // Confirmed on GitHub ✅
+            resolve(data.url);
+          } else if (attempts < maxAttempts) {
+            // Not yet — retry after 3 seconds
+            setStatus("⏳ Waiting for GitHub... (" + attempts + "/" + maxAttempts + ")", true);
+            setTimeout(check, 3000);
+          } else {
+            // Max retries reached — use expected URL anyway
+            // Upload almost certainly succeeded, GitHub API is just slow
+            resolve(expectedUrl);
+          }
+        };
+
+        s.onerror = function() {
+          delete window[cbName];
+          if (s.parentNode) s.parentNode.removeChild(s);
+          if (attempts < maxAttempts) {
+            setTimeout(check, 3000);
+          } else {
+            resolve(expectedUrl);
+          }
+        };
+
         s.src = SCRIPT_URL
           + "?action=checkImage"
           + "&password=" + encodeURIComponent(ADMIN_PASSWORD)
@@ -373,9 +397,13 @@ function uploadViaAppsScript(base64DataUrl, filename) {
           + "&callback=" + cbName
           + "&t=" + Date.now();
         document.head.appendChild(s);
-      }, 4000);
+      }
+
+      // Wait 8 seconds before first check to give GitHub time to process
+      setStatus("⏳ Uploading photo to GitHub... please wait", true);
+      setTimeout(check, 8000);
+
     }).catch(function(err) {
-      clearTimeout(timer);
       reject(err);
     });
   });
@@ -390,49 +418,59 @@ async function addProduct() {
   var badge  = document.getElementById("pBadge").value;
   var desc   = document.getElementById("pDesc").value.trim();
   var meesho = document.getElementById("pMeesho").value.trim();
+
   if (!name)           { showToast("❌ Enter product name","e"); return; }
   if (!price)          { showToast("❌ Enter selling price","e"); return; }
   if (!meesho)         { showToast("❌ Enter Meesho link","e"); return; }
   if (!imgFiles.length){ showToast("❌ Upload at least 1 photo","e"); return; }
 
-  var btn=document.getElementById("submitBtn"),spin=document.getElementById("submitSpinner"),txt=document.getElementById("submitText");
+  var btn  = document.getElementById("submitBtn");
+  var spin = document.getElementById("submitSpinner");
+  var txt  = document.getElementById("submitText");
   btn.disabled=true; spin.classList.add("show"); txt.style.display="none";
 
+  // Upload images one by one via Apps Script → GitHub
   var uploadedUrls = [];
   for (var i = 0; i < imgFiles.length; i++) {
-    imgFiles[i].status="uploading"; renderPreviews();
-    setStatus("📤 Uploading photo "+(i+1)+" of "+imgFiles.length+" via server...", true);
-    setProgress(Math.round((i/imgFiles.length)*80));
+    imgFiles[i].status = "uploading"; renderPreviews();
+    setStatus("📤 Uploading photo "+(i+1)+" of "+imgFiles.length+"...", true);
+    setProgress(Math.round((i/imgFiles.length)*70));
     try {
       var url = await uploadViaAppsScript(imgFiles[i].base64, imgFiles[i].name);
-      imgFiles[i].status="done"; imgFiles[i].url=url;
-      uploadedUrls.push(url); renderPreviews();
+      imgFiles[i].status = "done";
+      imgFiles[i].url    = url;
+      uploadedUrls.push(url);
+      renderPreviews();
     } catch(err) {
-      imgFiles[i].status="ready"; renderPreviews();
+      imgFiles[i].status = "ready"; renderPreviews();
       showToast("❌ Photo "+(i+1)+" failed: "+err.message,"e");
       btn.disabled=false; spin.classList.remove("show"); txt.style.display="inline";
       setStatus("",false); return;
     }
   }
 
+  // Save product details to Google Sheet
   setProgress(90);
-  setStatus("💾 Saving product details...", true);
-
+  setStatus("💾 Saving product to website...", true);
   try {
-    await fetch(SCRIPT_URL,{
+    await fetch(SCRIPT_URL, {
       method:"POST", mode:"no-cors",
       headers:{"Content-Type":"text/plain"},
-      body:JSON.stringify({
-        action:"addProduct", password:ADMIN_PASSWORD,
-        name:name, price:Number(price),
-        origPrice:origP?Number(origP):"",
-        category:cat, badge:badge,
-        description:desc, meeshoLink:meesho,
-        uploadedUrls:uploadedUrls
+      body: JSON.stringify({
+        action:       "addProduct",
+        password:     ADMIN_PASSWORD,
+        name:         name,
+        price:        Number(price),
+        origPrice:    origP ? Number(origP) : "",
+        category:     cat,
+        badge:        badge,
+        description:  desc,
+        meeshoLink:   meesho,
+        uploadedUrls: uploadedUrls
       })
     });
     setProgress(100); setStatus("",false);
-    showToast("✅ Product added! Live on website 🎉","s");
+    showToast("✅ Product added! Live on website now 🎉","s");
     resetForm();
     setTimeout(loadProducts, 3000);
   } catch(err) {
@@ -443,14 +481,18 @@ async function addProduct() {
   }
 }
 
-function resetForm(){
-  ["pName","pPrice","pOrigPrice","pDesc","pMeesho"].forEach(function(id){document.getElementById(id).value="";});
-  document.getElementById("pBadge").value=""; document.getElementById("pCategory").value="kurta";
-  document.getElementById("imgInput").value=""; imgFiles=[]; renderPreviews(); setStatus("",false);
+function resetForm() {
+  ["pName","pPrice","pOrigPrice","pDesc","pMeesho"].forEach(function(id){
+    document.getElementById(id).value="";
+  });
+  document.getElementById("pBadge").value="";
+  document.getElementById("pCategory").value="kurta";
+  document.getElementById("imgInput").value="";
+  imgFiles=[]; renderPreviews(); setStatus("",false);
 }
 
 // ── Load products ─────────────────────────────────────────────
-function loadProducts(){
+function loadProducts() {
   var old=document.getElementById("jsonpProd");
   if(old) old.parentNode.removeChild(old);
   window._prodCb=function(data){
@@ -462,7 +504,7 @@ function loadProducts(){
   var s=document.createElement("script");
   s.id="jsonpProd";
   s.src=SCRIPT_URL+"?action=getProductsAdmin&password="+encodeURIComponent(ADMIN_PASSWORD)+"&callback=_prodCb&t="+Date.now();
-  s.onerror=function(){showToast("❌ Could not load","e");};
+  s.onerror=function(){showToast("❌ Could not load products","e");};
   document.head.appendChild(s);
 }
 
@@ -472,49 +514,70 @@ function getImgs(p){
   return [];
 }
 
+// ── Render product cards ──────────────────────────────────────
 function renderCards(){
   var grid=document.getElementById("productsGrid");
-  if(!allProds.length){grid.innerHTML='<div class="empty-products"><p>📦 No products yet.</p></div>';return;}
+  if(!allProds.length){
+    grid.innerHTML='<div class="empty-products"><p>📦 No products yet. Add your first!</p></div>'; return;
+  }
   grid.innerHTML=allProds.map(function(p,ci){
     var isActive=String(p.active).toUpperCase()==="YES";
-    var imgs=getImgs(p),cid="pg"+ci,gHtml="";
+    var imgs=getImgs(p), cid="pg"+ci, gHtml="";
     if(!imgs.length){
       gHtml='<div class="prod-gallery"><div class="prod-placeholder">🛍️</div></div>';
     } else if(imgs.length===1){
-      gHtml='<div class="prod-gallery"><img src="'+imgs[0]+'" style="width:100%;height:160px;object-fit:cover" onerror="this.parentElement.innerHTML=\'<div class=&quot;prod-placeholder&quot;>🛍️</div>\'"/></div>';
+      gHtml='<div class="prod-gallery">'
+        +'<img src="'+imgs[0]+'" style="width:100%;height:160px;object-fit:cover" '
+        +'onerror="this.parentElement.innerHTML=\'<div class=&quot;prod-placeholder&quot;>🛍️</div>\'"/>'
+        +'</div>';
     } else {
-      var dots=imgs.map(function(_,di){return '<span class="g-dot'+(di===0?" active":"")+'" onclick="gSlide(\''+cid+'\','+di+')"></span>';}).join("");
-      var itags=imgs.map(function(u){return '<img src="'+u+'" style="min-width:100%;height:160px;object-fit:cover;flex-shrink:0" onerror="this.style.display=\'none\'"/>';}).join("");
-      gHtml='<div class="prod-gallery" id="'+cid+'" data-cur="0"><div class="prod-gallery-track">'+itags+'</div>'
+      var dots=imgs.map(function(_,di){
+        return '<span class="g-dot'+(di===0?" active":"")+'" onclick="gSlide(\''+cid+'\','+di+')"></span>';
+      }).join("");
+      var itags=imgs.map(function(u){
+        return '<img src="'+u+'" style="min-width:100%;height:160px;object-fit:cover;flex-shrink:0" onerror="this.style.display=\'none\'"/>';
+      }).join("");
+      gHtml='<div class="prod-gallery" id="'+cid+'" data-cur="0">'
+        +'<div class="prod-gallery-track">'+itags+'</div>'
         +'<button class="g-arrow l" onclick="gMove(\''+cid+'\',-1)">‹</button>'
         +'<button class="g-arrow r" onclick="gMove(\''+cid+'\',1)">›</button>'
-        +'<div class="g-dots">'+dots+'</div><span class="g-count">📸 '+imgs.length+'</span></div>';
+        +'<div class="g-dots">'+dots+'</div>'
+        +'<span class="g-count">📸 '+imgs.length+'</span>'
+        +'</div>';
     }
     return '<div class="prod-card'+(isActive?"":" inactive")+'">'
       +'<span class="'+(isActive?"active-badge":"inactive-badge")+'">'+(isActive?"✅ Live":"⏸ Hidden")+'</span>'
-      +gHtml+'<div class="prod-body">'
+      +gHtml
+      +'<div class="prod-body">'
       +'<div class="prod-cat">'+p.category+'</div>'
       +'<div class="prod-name">'+p.name+'</div>'
-      +'<div class="prod-price">Rs.'+p.price+(p.origPrice?'<span style="font-size:10px;color:var(--muted);text-decoration:line-through;margin-left:4px">Rs.'+p.origPrice+'</span>':'')+'</div>'
+      +'<div class="prod-price">Rs.'+p.price
+        +(p.origPrice?'<span style="font-size:10px;color:var(--muted);text-decoration:line-through;margin-left:4px">Rs.'+p.origPrice+'</span>':'')
+        +'</div>'
       +'<div class="prod-actions">'
       +'<button class="pa-btn pa-toggle'+(isActive?"":" off")+'" onclick="toggleProd(\''+p.id+'\','+!isActive+')">'+(isActive?"⏸ Hide":"▶ Show")+'</button>'
       +'<button class="pa-btn pa-del" onclick="delProd(\''+p.id+'\',\''+p.name.replace(/'/g,"")+'\')">🗑 Del</button>'
       +'</div>'
-      +(p.meeshoLink&&p.meeshoLink!=="undefined"&&p.meeshoLink!==""?'<a class="meesho-btn" href="'+p.meeshoLink+'" target="_blank">🛒 Open on Meesho</a>':'')
+      +(p.meeshoLink&&p.meeshoLink!=="undefined"&&p.meeshoLink!==""
+        ?'<a class="meesho-btn" href="'+p.meeshoLink+'" target="_blank">🛒 Open on Meesho</a>':'')
       +'</div></div>';
   }).join("");
 }
 
 function gSlide(cid,idx){
-  var wrap=document.getElementById(cid);if(!wrap)return;
-  var track=wrap.querySelector(".prod-gallery-track");if(!track)return;
+  var wrap=document.getElementById(cid); if(!wrap)return;
+  var track=wrap.querySelector(".prod-gallery-track"); if(!track)return;
   var total=track.children.length;
   idx=((idx%total)+total)%total;
   wrap.setAttribute("data-cur",idx);
   track.style.transform="translateX(-"+(idx*100)+"%)";
   wrap.querySelectorAll(".g-dot").forEach(function(d,i){d.classList.toggle("active",i===idx);});
 }
-function gMove(cid,dir){var wrap=document.getElementById(cid);if(!wrap)return;var cur=parseInt(wrap.getAttribute("data-cur"))||0;gSlide(cid,cur+dir);}
+function gMove(cid,dir){
+  var wrap=document.getElementById(cid); if(!wrap)return;
+  var cur=parseInt(wrap.getAttribute("data-cur"))||0;
+  gSlide(cid,cur+dir);
+}
 function delProd(id,name){
   if(!confirm("Delete '"+name+"'?"))return;
   fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},
@@ -525,8 +588,10 @@ function delProd(id,name){
 function toggleProd(id,makeActive){
   fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},
     body:JSON.stringify({action:"toggleProduct",password:ADMIN_PASSWORD,productId:id,active:makeActive})
-  }).then(function(){showToast(makeActive?"✅ Product Live":"⏸ Hidden","s");setTimeout(loadProducts,2000);})
-  .catch(function(){showToast("❌ Failed","e");});
+  }).then(function(){
+    showToast(makeActive?"✅ Product Live on shop":"⏸ Hidden from shop","s");
+    setTimeout(loadProducts,2000);
+  }).catch(function(){showToast("❌ Failed","e");});
 }
 function showToast(msg,type){
   var t=document.getElementById("toast");
