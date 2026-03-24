@@ -250,10 +250,10 @@ tr.pending td:first-child{border-left:3px solid #F39C12;}
     const filtered = allOrders.filter(o => {
       const ms = !search
         || (o['Customer Name'] || '').toLowerCase().includes(search)
-        || (o['Phone']        || '').toString().includes(search)
-        || (o['Order ID']     || '').toLowerCase().includes(search)
+        || (o['Phone']         || '').toString().includes(search)
+        || (o['Order ID']      || '').toLowerCase().includes(search)
         || (o['Product Name'] || '').toLowerCase().includes(search)
-        || (o['City']         || '').toLowerCase().includes(search);
+        || (o['City']          || '').toLowerCase().includes(search);
       const mf = filter === 'all' || o['Status'] === filter;
       return ms && mf;
     });
@@ -396,6 +396,12 @@ tr.pending td:first-child{border-left:3px solid #F39C12;}
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
   }
+
+  // --- EXPOSE TO GLOBAL SCOPE FOR INLINE HTML HANDLERS ---
+  window.doLogin = doLogin;
+  window.doLogout = doLogout;
+  window.loadOrders = loadOrders;
+  window.renderTable = renderTable;
 
 })();
 </script>
