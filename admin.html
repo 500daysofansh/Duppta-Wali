@@ -6,82 +6,78 @@
 <title>DupattaWali — Admin Orders</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet"/>
 <style>
-  :root{--saffron:#E8600A;--dark:#1A1A2E;--border:#E8D5C4;--muted:#888;--green:#2D7A4F;--red:#E74C3C;}
-  *{margin:0;padding:0;box-sizing:border-box;}
-  body{font-family:'DM Sans',sans-serif;background:#F0F0F5;color:var(--dark);min-height:100vh;}
-  .login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--dark),#3D1F00);}
-  .login-box{background:#fff;border-radius:24px;padding:48px 40px;width:100%;max-width:400px;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.3);}
-  .login-logo{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:var(--saffron);margin-bottom:6px;}
-  .login-sub{font-size:13px;color:var(--muted);margin-bottom:32px;}
-  .login-box input{width:100%;padding:14px 16px;border:1.5px solid var(--border);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:15px;outline:none;margin-bottom:14px;}
-  .login-box input:focus{border-color:var(--saffron);}
-  .login-btn{width:100%;padding:15px;background:var(--saffron);color:#fff;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;cursor:pointer;}
-  .login-btn:hover{background:#c45208;}
-  .login-error{color:var(--red);font-size:13px;margin-top:12px;display:none;}
-  .app{display:none;}
-  .app-header{background:var(--dark);color:#fff;padding:0 28px;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:50;}
-  .app-header h1{font-family:'Playfair Display',serif;font-size:20px;}
-  .app-header h1 span{color:var(--saffron);}
-  .hright{display:flex;align-items:center;gap:14px;}
-  .live-dot{width:8px;height:8px;background:#2ECC71;border-radius:50%;animation:pulse 2s infinite;}
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-  .nav-link{color:rgba(255,255,255,.7);text-decoration:none;font-size:13px;padding:6px 14px;border-radius:8px;transition:all .2s;}
-  .nav-link:hover{background:rgba(255,255,255,.1);color:#fff;}
-  .logout-btn{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);padding:7px 16px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;}
-  .stats-bar{display:flex;gap:16px;padding:20px 28px;flex-wrap:wrap;}
-  .stat{background:#fff;border-radius:14px;padding:18px 22px;flex:1;min-width:140px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
-  .stat.s1{border-left:4px solid var(--saffron);}
-  .stat.s2{border-left:4px solid var(--red);}
-  .stat.s3{border-left:4px solid var(--green);}
-  .stat.s4{border-left:4px solid #2980B9;}
-  .stat-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
-  .stat-value{font-size:26px;font-weight:700;}
-  .stat.s1 .stat-value{color:var(--saffron);}
-  .stat.s2 .stat-value{color:var(--red);}
-  .stat.s3 .stat-value{color:var(--green);}
-  .stat.s4 .stat-value{color:#2980B9;}
-  .toolbar{padding:0 28px 16px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
-  .search-box{flex:1;min-width:220px;padding:10px 16px;border:1.5px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;background:#fff;}
-  .search-box:focus{border-color:var(--saffron);}
-  .filter-sel{padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;background:#fff;cursor:pointer;}
-  .refresh-btn{padding:10px 20px;background:var(--saffron);color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;}
-  .refresh-btn:hover{background:#c45208;}
-  .table-wrap{padding:0 28px 40px;overflow-x:auto;}
-  table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.07);font-size:13px;min-width:1400px;}
-  thead{background:var(--dark);color:#fff;}
-  th{padding:14px;text-align:left;font-weight:600;white-space:nowrap;font-size:12px;}
-  td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:middle;}
-  tr:last-child td{border-bottom:none;}
-  tr.placed td{background:#F0FFF4;}
-  tr.placed td:first-child{border-left:3px solid var(--green);}
-  tr.pending td:first-child{border-left:3px solid #F39C12;}
-  .badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:50px;font-size:11px;font-weight:700;white-space:nowrap;}
-  .bp{background:#FFF3CD;color:#856404;}
-  .bpl{background:#D4EDDA;color:var(--green);}
-  .bc{background:#E8F4FD;color:#2980B9;}
-  .abtn{padding:7px 12px;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;}
-  .abtn.gn{background:var(--green);color:#fff;}
-  .abtn.gn:hover{background:#1e5c39;}
-  .abtn.or{background:#F39C12;color:#fff;}
-  .abtn:disabled{opacity:.5;cursor:not-allowed;}
-  .meesho-order-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;background:#FFF0E0;color:var(--saffron);border:1.5px solid var(--saffron);border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;white-space:nowrap;transition:all .2s;}
-  .meesho-order-btn:hover{background:var(--saffron);color:#fff;}
-  .order-id{font-family:monospace;font-size:12px;background:#F5F5F5;padding:3px 8px;border-radius:6px;}
-  .phone-link{color:var(--saffron);font-weight:600;text-decoration:none;}
-  .msg-row{text-align:center;padding:50px;color:var(--muted);}
-  .msg-row h3{font-size:18px;margin-bottom:8px;}
-  .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(100px);color:#fff;padding:12px 24px;border-radius:50px;font-size:14px;font-weight:600;z-index:999;transition:transform .3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;}
-  .toast.show{transform:translateX(-50%) translateY(0);}
-  .toast.s{background:var(--green);}
-  .toast.e{background:var(--red);}
-  .toast.i{background:var(--dark);}
+:root{--saffron:#E8600A;--dark:#1A1A2E;--border:#E8D5C4;--muted:#888;--green:#2D7A4F;--red:#E74C3C;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:#F0F0F5;color:var(--dark);min-height:100vh;}
+.login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--dark),#3D1F00);}
+.login-box{background:#fff;border-radius:24px;padding:48px 40px;width:100%;max-width:400px;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.3);}
+.login-logo{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:var(--saffron);margin-bottom:6px;}
+.login-sub{font-size:13px;color:var(--muted);margin-bottom:32px;}
+.login-box input{width:100%;padding:14px 16px;border:1.5px solid var(--border);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:15px;outline:none;margin-bottom:14px;}
+.login-box input:focus{border-color:var(--saffron);}
+.login-btn{width:100%;padding:15px;background:var(--saffron);color:#fff;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;cursor:pointer;}
+.login-btn:hover{background:#c45208;}
+.login-error{color:var(--red);font-size:13px;margin-top:12px;display:none;}
+.app{display:none;}
+.app-header{background:var(--dark);color:#fff;padding:0 28px;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:50;}
+.app-header h1{font-family:'Playfair Display',serif;font-size:20px;}
+.app-header h1 span{color:var(--saffron);}
+.hright{display:flex;align-items:center;gap:14px;}
+.live-dot{width:8px;height:8px;background:#2ECC71;border-radius:50%;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.nav-link{color:rgba(255,255,255,.7);text-decoration:none;font-size:13px;padding:6px 14px;border-radius:8px;transition:all .2s;}
+.nav-link:hover{background:rgba(255,255,255,.1);color:#fff;}
+.logout-btn{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);padding:7px 16px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;}
+.stats-bar{display:flex;gap:16px;padding:20px 28px;flex-wrap:wrap;}
+.stat{background:#fff;border-radius:14px;padding:18px 22px;flex:1;min-width:140px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.stat.s1{border-left:4px solid var(--saffron);}
+.stat.s2{border-left:4px solid var(--red);}
+.stat.s3{border-left:4px solid var(--green);}
+.stat.s4{border-left:4px solid #2980B9;}
+.stat-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+.stat-value{font-size:26px;font-weight:700;}
+.stat.s1 .stat-value{color:var(--saffron);}
+.stat.s2 .stat-value{color:var(--red);}
+.stat.s3 .stat-value{color:var(--green);}
+.stat.s4 .stat-value{color:#2980B9;}
+.toolbar{padding:0 28px 16px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+.search-box{flex:1;min-width:220px;padding:10px 16px;border:1.5px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;background:#fff;}
+.search-box:focus{border-color:var(--saffron);}
+.filter-sel{padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;background:#fff;cursor:pointer;}
+.refresh-btn{padding:10px 20px;background:var(--saffron);color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;}
+.refresh-btn:hover{background:#c45208;}
+.table-wrap{padding:0 28px 40px;overflow-x:auto;}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.07);font-size:13px;min-width:1400px;}
+thead{background:var(--dark);color:#fff;}
+th{padding:14px;text-align:left;font-weight:600;white-space:nowrap;font-size:12px;}
+td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr.placed td{background:#F0FFF4;}
+tr.placed td:first-child{border-left:3px solid var(--green);}
+tr.pending td:first-child{border-left:3px solid #F39C12;}
+.badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:50px;font-size:11px;font-weight:700;white-space:nowrap;}
+.bp{background:#FFF3CD;color:#856404;}
+.bpl{background:#D4EDDA;color:var(--green);}
+.bc{background:#E8F4FD;color:#2980B9;}
+.abtn{padding:7px 12px;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;}
+.abtn.gn{background:var(--green);color:#fff;}
+.abtn.gn:hover{background:#1e5c39;}
+.abtn.or{background:#F39C12;color:#fff;}
+.abtn:disabled{opacity:.5;cursor:not-allowed;}
+.meesho-order-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;background:#FFF0E0;color:var(--saffron);border:1.5px solid var(--saffron);border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;white-space:nowrap;transition:all .2s;}
+.meesho-order-btn:hover{background:var(--saffron);color:#fff;}
+.order-id{font-family:monospace;font-size:12px;background:#F5F5F5;padding:3px 8px;border-radius:6px;}
+.phone-link{color:var(--saffron);font-weight:600;text-decoration:none;}
+.msg-row{text-align:center;padding:50px;color:var(--muted);}
+.msg-row h3{font-size:18px;margin-bottom:8px;}
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(100px);color:#fff;padding:12px 24px;border-radius:50px;font-size:14px;font-weight:600;z-index:999;transition:transform .3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.toast.s{background:var(--green);}
+.toast.e{background:var(--red);}
+.toast.i{background:var(--dark);}
 </style>
 </head>
 <body>
-<script>
-  var SCRIPT_URL = "https://script.google.com/macros/s/AKfycby3MNYkhQHos3mU_GVn_VCkKAIBhgUD1xS22w9Q5bRD2Ey4xVpLDW3PuCrMlh2taHuA/exec";
-  var ADMIN_PASSWORD = "dupattawali@2024";
-</script>
 
 <div class="login-screen" id="loginScreen">
   <div class="login-box">
@@ -148,128 +144,260 @@
 <div class="toast" id="toast"></div>
 
 <script>
-var allOrders = [];
+(function () {
+  'use strict';
 
-function doLogin() {
-  var user = document.getElementById("loginUser").value.trim();
-  var pass = document.getElementById("loginPass").value;
-  if (!user) { alert("Enter your name"); return; }
-  if (pass !== ADMIN_PASSWORD) { document.getElementById("loginError").style.display="block"; return; }
-  document.getElementById("loginScreen").style.display = "none";
-  document.getElementById("mainApp").style.display = "block";
-  document.getElementById("adminName").textContent = "👤 " + user;
-  loadOrders();
-  setInterval(loadOrders, 60000);
-}
-function doLogout() {
-  document.getElementById("loginScreen").style.display = "flex";
-  document.getElementById("mainApp").style.display = "none";
-  document.getElementById("loginPass").value = "";
-  document.getElementById("loginError").style.display = "none";
-}
+  const SCRIPT_URL     = 'https://script.google.com/macros/s/AKfycby3MNYkhQHos3mU_GVn_VCkKAIBhgUD1xS22w9Q5bRD2Ey4xVpLDW3PuCrMlh2taHuA/exec';
+  const ADMIN_PASSWORD = 'dupattawali@2024';
+  const SS_USER_KEY    = 'dw_admin_user';
+  const SS_PASS_KEY    = 'dw_admin_pass'; // stores hashed-ish flag, not plain pw
 
-function loadOrders() {
-  document.getElementById("ordersBody").innerHTML = '<tr><td colspan="19" class="msg-row"><h3>🔄 Loading...</h3></td></tr>';
-  var old = document.getElementById("jsonpTag");
-  if (old) old.parentNode.removeChild(old);
-  window._ordersCallback = function(data) {
-    if (!data.success) { showToast("❌ "+(data.error||"Failed"),"e"); return; }
-    allOrders = data.orders || [];
-    updateStats();
-    renderTable();
-    showToast("✅ "+allOrders.length+" orders loaded","s");
-  };
-  var s = document.createElement("script");
-  s.id = "jsonpTag";
-  s.src = SCRIPT_URL+"?action=getOrders&password="+encodeURIComponent(ADMIN_PASSWORD)+"&callback=_ordersCallback&t="+Date.now();
-  s.onerror = function(){ showToast("❌ Could not load orders","e"); };
-  document.head.appendChild(s);
-}
+  let allOrders  = [];
+  let autoTimer  = null;
+  let toastTimer = null;
 
-function updateStats() {
-  var pending=0, placed=0, revenue=0, seen={};
-  allOrders.forEach(function(o){
-    if(o["Status"]==="Pending") pending++;
-    if(o["Status"]==="Placed on Meesho") placed++;
-    if(!seen[o["Order ID"]]){
-      seen[o["Order ID"]]=true;
-      revenue+=parseFloat(o["Grand Total (Rs.)"||0]||0);
+  // ── Boot: auto-login if session is active ─────────────────────
+  (function restoreSession() {
+    const savedUser = sessionStorage.getItem(SS_USER_KEY);
+    const savedPass = sessionStorage.getItem(SS_PASS_KEY);
+    if (savedUser && savedPass === 'ok') {
+      document.getElementById('loginUser').value = savedUser;
+      // Skip login screen entirely
+      showApp(savedUser);
     }
-  });
-  document.getElementById("sTotal").textContent = allOrders.length;
-  document.getElementById("sPending").textContent = pending;
-  document.getElementById("sPlaced").textContent = placed;
-  document.getElementById("sRevenue").textContent = "Rs."+revenue.toLocaleString("en-IN");
-}
+  })();
 
-function renderTable() {
-  var search = document.getElementById("searchBox").value.toLowerCase();
-  var filter = document.getElementById("statusFilter").value;
-  var filtered = allOrders.filter(function(o){
-    var ms = !search
-      ||(o["Customer Name"]||"").toLowerCase().includes(search)
-      ||(o["Phone"]||"").toString().includes(search)
-      ||(o["Order ID"]||"").toLowerCase().includes(search)
-      ||(o["Product Name"]||"").toLowerCase().includes(search)
-      ||(o["City"]||"").toLowerCase().includes(search);
-    var mf = filter==="all" || o["Status"]===filter;
-    return ms && mf;
-  });
-  var tbody = document.getElementById("ordersBody");
-  if (!filtered.length) {
-    tbody.innerHTML = '<tr><td colspan="19" class="msg-row"><h3>📭 No orders found</h3></td></tr>';
-    return;
+  function doLogin() {
+    const user = document.getElementById('loginUser').value.trim();
+    const pass = document.getElementById('loginPass').value;
+    if (!user) { alert('Enter your name'); return; }
+    if (pass !== ADMIN_PASSWORD) {
+      document.getElementById('loginError').style.display = 'block';
+      return;
+    }
+    try {
+      sessionStorage.setItem(SS_USER_KEY, user);
+      sessionStorage.setItem(SS_PASS_KEY, 'ok');
+    } catch (_) {}
+    showApp(user);
   }
-  tbody.innerHTML = filtered.map(function(o,i){
-    var placed = o["Status"]==="Placed on Meesho";
-    var id = o["Order ID"]||"";
-    var meeshoLink = o["Meesho Link"]||"";
-    return '<tr class="'+(placed?"placed":"pending")+'">'
-      +'<td style="color:var(--muted);font-size:11px">'+(i+1)+'</td>'
-      +'<td><span class="order-id">'+id+'</span></td>'
-      +'<td style="white-space:nowrap;font-size:12px">'+(o["Date"]||"")+'</td>'
-      +'<td style="white-space:nowrap;font-size:12px;color:var(--muted)">'+(o["Time"]||"")+'</td>'
-      +'<td><strong>'+(o["Customer Name"]||"")+'</strong><br><span style="font-size:11px;color:var(--muted)">'+(o["Email"]||"")+'</span></td>'
-      +'<td><a class="phone-link" href="tel:'+(o["Phone"]||"")+'">'+(o["Phone"]||"")+'</a></td>'
-      +'<td style="max-width:150px">'+(o["Product Name"]||"")+'<br><span style="font-size:11px;color:var(--muted)">'+(o["Product ID"]||"")+'</span></td>'
-      +'<td style="text-align:center;font-weight:700">'+(o["Quantity"]||"")+'</td>'
-      +'<td>Rs.'+(o["Unit Price (Rs.)"]||"")+'</td>'
-      +'<td><strong>Rs.'+(o["Total Price (Rs.)"]||"")+'</strong></td>'
-      +'<td><strong style="color:var(--saffron)">Rs.'+(o["Grand Total (Rs.)"]||"")+'</strong></td>'
-      +'<td style="font-size:12px;max-width:160px">'+(o["Address"]||"")+'</td>'
-      +'<td style="font-size:12px">'+(o["City"]||"")+'</td>'
-      +'<td style="font-size:12px">'+(o["State"]||"")+'</td>'
-      +'<td>'+(o["Pincode"]||"")+'</td>'
-      +'<td><span class="badge bc">💵 COD</span></td>'
-      +'<td><span class="badge '+(placed?"bpl":"bp")+'">'+(placed?"✅ Placed":"⏳ Pending")+'</span></td>'
-      +'<td>'+(meeshoLink&&meeshoLink!==""&&meeshoLink!=="undefined"
-        ?'<a class="meesho-order-btn" href="'+meeshoLink+'" target="_blank">🛒 Order on Meesho</a>'
-        :'<span style="color:var(--muted);font-size:12px">No link</span>')
-      +'</td>'
-      +'<td>'+(placed
-        ?'<button class="abtn or" onclick="updateStatus(\''+id+'\',\'Pending\',this)">↩ Undo</button>'
-        :'<button class="abtn gn" onclick="updateStatus(\''+id+'\',\'Placed on Meesho\',this)">✅ Mark Placed</button>')
-      +'</td></tr>';
-  }).join("");
-}
 
-function updateStatus(orderId, newStatus, btn) {
-  btn.disabled=true; btn.textContent="Saving...";
-  fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},
-    body:JSON.stringify({action:"updateStatus",orderId:orderId,status:newStatus})
-  }).then(function(){
-    allOrders.forEach(function(o){ if(o["Order ID"]===orderId) o["Status"]=newStatus; });
-    updateStats(); renderTable();
-    showToast(newStatus==="Placed on Meesho"?"✅ Marked as Placed on Meesho!":"↩ Marked as Pending","s");
-  }).catch(function(){ btn.disabled=false; showToast("❌ Update failed","e"); });
-}
+  function showApp(user) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('mainApp').style.display     = 'block';
+    document.getElementById('adminName').textContent     = '👤 ' + user;
+    document.getElementById('loginError').style.display  = 'none';
+    loadOrders();
+    clearInterval(autoTimer);
+    autoTimer = setInterval(loadOrders, 60000);
+  }
 
-function showToast(msg,type){
-  var t=document.getElementById("toast");
-  t.textContent=msg; t.className="toast "+(type||"i")+" show";
-  clearTimeout(window._tt);
-  window._tt=setTimeout(function(){t.classList.remove("show");},3000);
-}
+  function doLogout() {
+    clearInterval(autoTimer);
+    try {
+      sessionStorage.removeItem(SS_USER_KEY);
+      sessionStorage.removeItem(SS_PASS_KEY);
+    } catch (_) {}
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('mainApp').style.display     = 'none';
+    document.getElementById('loginPass').value           = '';
+    document.getElementById('loginError').style.display  = 'none';
+  }
+
+  function loadOrders() {
+    document.getElementById('ordersBody').innerHTML =
+      '<tr><td colspan="19" class="msg-row"><h3>🔄 Loading…</h3></td></tr>';
+
+    const old = document.getElementById('jsonpTag');
+    if (old) old.parentNode.removeChild(old);
+
+    window._ordersCallback = function (data) {
+      if (!data.success) { showToast('❌ ' + (data.error || 'Failed'), 'e'); return; }
+      allOrders = data.orders || [];
+      updateStats();
+      renderTable();
+      showToast('✅ ' + allOrders.length + ' orders loaded', 's');
+    };
+
+    const s  = document.createElement('script');
+    s.id     = 'jsonpTag';
+    s.src    = `${SCRIPT_URL}?action=getOrders&password=${encodeURIComponent(ADMIN_PASSWORD)}&callback=_ordersCallback&t=${Date.now()}`;
+    s.onerror = () => showToast('❌ Could not load orders', 'e');
+    document.head.appendChild(s);
+  }
+
+  function updateStats() {
+    let pending = 0, placed = 0, revenue = 0;
+    const seen = {};
+    allOrders.forEach(o => {
+      if (o['Status'] === 'Pending') pending++;
+      if (o['Status'] === 'Placed on Meesho') placed++;
+      if (!seen[o['Order ID']]) {
+        seen[o['Order ID']] = true;
+        revenue += parseFloat(o['Grand Total (Rs.)'] || 0);
+      }
+    });
+    document.getElementById('sTotal').textContent   = allOrders.length;
+    document.getElementById('sPending').textContent  = pending;
+    document.getElementById('sPlaced').textContent   = placed;
+    document.getElementById('sRevenue').textContent  = 'Rs.' + revenue.toLocaleString('en-IN');
+  }
+
+  function renderTable() {
+    const search = document.getElementById('searchBox').value.toLowerCase();
+    const filter = document.getElementById('statusFilter').value;
+
+    const filtered = allOrders.filter(o => {
+      const ms = !search
+        || (o['Customer Name'] || '').toLowerCase().includes(search)
+        || (o['Phone']        || '').toString().includes(search)
+        || (o['Order ID']     || '').toLowerCase().includes(search)
+        || (o['Product Name'] || '').toLowerCase().includes(search)
+        || (o['City']         || '').toLowerCase().includes(search);
+      const mf = filter === 'all' || o['Status'] === filter;
+      return ms && mf;
+    });
+
+    const tbody = document.getElementById('ordersBody');
+    if (!filtered.length) {
+      tbody.innerHTML = '<tr><td colspan="19" class="msg-row"><h3>📭 No orders found</h3></td></tr>';
+      return;
+    }
+
+    // Build table rows via DOM to prevent XSS from customer data
+    tbody.innerHTML = '';
+    filtered.forEach((o, i) => {
+      const placed     = o['Status'] === 'Placed on Meesho';
+      const id         = o['Order ID'] || '';
+      const meeshoLink = o['Meesho Link'] || '';
+
+      const tr = document.createElement('tr');
+      tr.className = placed ? 'placed' : 'pending';
+
+      function td(content, isHtml) {
+        const cell = document.createElement('td');
+        if (isHtml) cell.innerHTML = content;
+        else cell.textContent = content;
+        return cell;
+      }
+
+      const idSpan = document.createElement('span');
+      idSpan.className   = 'order-id';
+      idSpan.textContent = id;
+      const idCell = document.createElement('td');
+      idCell.appendChild(idSpan);
+
+      const phoneLink = document.createElement('a');
+      phoneLink.className   = 'phone-link';
+      phoneLink.href        = 'tel:' + (o['Phone'] || '');
+      phoneLink.textContent = o['Phone'] || '';
+      const phoneCell = document.createElement('td');
+      phoneCell.appendChild(phoneLink);
+
+      const customerCell = document.createElement('td');
+      const strong = document.createElement('strong');
+      strong.textContent = o['Customer Name'] || '';
+      const emailSpan = document.createElement('span');
+      emailSpan.style.cssText = 'font-size:11px;color:var(--muted)';
+      emailSpan.textContent   = o['Email'] || '';
+      customerCell.appendChild(strong);
+      customerCell.appendChild(document.createElement('br'));
+      customerCell.appendChild(emailSpan);
+
+      const productCell = document.createElement('td');
+      productCell.style.maxWidth = '150px';
+      productCell.textContent = o['Product Name'] || '';
+      const pidSpan = document.createElement('span');
+      pidSpan.style.cssText = 'font-size:11px;color:var(--muted);display:block';
+      pidSpan.textContent   = o['Product ID'] || '';
+      productCell.appendChild(pidSpan);
+
+      const statusCell = document.createElement('td');
+      const statusBadge = document.createElement('span');
+      statusBadge.className   = 'badge ' + (placed ? 'bpl' : 'bp');
+      statusBadge.textContent = placed ? '✅ Placed' : '⏳ Pending';
+      statusCell.appendChild(statusBadge);
+
+      const meeshoCell = document.createElement('td');
+      if (meeshoLink && meeshoLink !== '' && meeshoLink !== 'undefined') {
+        const a = document.createElement('a');
+        a.className   = 'meesho-order-btn';
+        a.href        = meeshoLink;
+        a.target      = '_blank';
+        a.rel         = 'noopener noreferrer';
+        a.textContent = '🛒 Order on Meesho';
+        meeshoCell.appendChild(a);
+      } else {
+        meeshoCell.style.color    = 'var(--muted)';
+        meeshoCell.style.fontSize = '12px';
+        meeshoCell.textContent    = 'No link';
+      }
+
+      const actionCell = document.createElement('td');
+      const actionBtn  = document.createElement('button');
+      actionBtn.className   = placed ? 'abtn or' : 'abtn gn';
+      actionBtn.textContent = placed ? '↩ Undo' : '✅ Mark Placed';
+      actionBtn.addEventListener('click', () => updateStatus(id, placed ? 'Pending' : 'Placed on Meesho', actionBtn));
+      actionCell.appendChild(actionBtn);
+
+      const codCell = document.createElement('td');
+      const codBadge = document.createElement('span');
+      codBadge.className   = 'badge bc';
+      codBadge.textContent = '💵 COD';
+      codCell.appendChild(codBadge);
+
+      // Assemble row
+      tr.appendChild(td(String(i + 1)));
+      tr.appendChild(idCell);
+      tr.appendChild(td(o['Date'] || ''));
+      tr.appendChild(td(o['Time'] || ''));
+      tr.appendChild(customerCell);
+      tr.appendChild(phoneCell);
+      tr.appendChild(productCell);
+      tr.appendChild(td(o['Quantity'] || ''));
+      tr.appendChild(td('Rs.' + (o['Unit Price (Rs.)'] || '')));
+      tr.appendChild(td('Rs.' + (o['Total Price (Rs.)'] || '')));
+      tr.appendChild(td('Rs.' + (o['Grand Total (Rs.)'] || '')));
+      tr.appendChild(td(o['Address'] || ''));
+      tr.appendChild(td(o['City'] || ''));
+      tr.appendChild(td(o['State'] || ''));
+      tr.appendChild(td(o['Pincode'] || ''));
+      tr.appendChild(codCell);
+      tr.appendChild(statusCell);
+      tr.appendChild(meeshoCell);
+      tr.appendChild(actionCell);
+
+      tbody.appendChild(tr);
+    });
+  }
+
+  function updateStatus(orderId, newStatus, btn) {
+    btn.disabled    = true;
+    btn.textContent = 'Saving…';
+    fetch(SCRIPT_URL, {
+      method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'updateStatus', orderId, status: newStatus })
+    }).then(() => {
+      allOrders.forEach(o => { if (o['Order ID'] === orderId) o['Status'] = newStatus; });
+      updateStats();
+      renderTable();
+      showToast(newStatus === 'Placed on Meesho' ? '✅ Marked as Placed on Meesho!' : '↩ Marked as Pending', 's');
+    }).catch(() => {
+      btn.disabled    = false;
+      btn.textContent = newStatus === 'Placed on Meesho' ? '✅ Mark Placed' : '↩ Undo';
+      showToast('❌ Update failed', 'e');
+    });
+  }
+
+  function showToast(msg, type) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className   = `toast ${type || 'i'} show`;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+})();
 </script>
 </body>
 </html>
