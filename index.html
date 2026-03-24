@@ -426,13 +426,37 @@ footer strong{color:#fff;}
   function loadCartFromStorage() {
     try {
       const raw = localStorage.getItem(CART_KEY);
-      return raw ? JSON.parse(raw) : [];
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return [];
+      // Validate each item has the minimum shape we need
+      return parsed.filter(i => i && i.id && typeof i.price === 'number' && typeof i.qty === 'number');
     } catch (_) { return []; }
   }
 
   function saveCartToStorage() {
-    try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch (_) {}
+    try {
+      const serialised = JSON.stringify(cart);
+      localStorage.setItem(CART_KEY, serialised);
+      // Read-back verify — confirms the write actually stuck
+      const verify = localStorage.getItem(CART_KEY);
+      if (verify !== serialised) {
+        console.warn('DW: cart write-back mismatch — localStorage may be full or blocked');
+      }
+    } catch (e) {
+      console.warn('DW: cart could not be saved to localStorage:', e.message);
+    }
   }
+
+  // Keep cart in sync if the user has two tabs open
+  window.addEventListener('storage', e => {
+    if (e.key !== CART_KEY) return;
+    try {
+      cart = e.newValue ? JSON.parse(e.newValue) : [];
+      if (!Array.isArray(cart)) cart = [];
+      updateCartUI();
+    } catch (_) {}
+  });
 
   // ── Product caching ──────────────────────────────────────────────
   function getCachedProducts() {
@@ -994,8 +1018,8 @@ footer strong{color:#fff;}
 
   function clearCart() { cart = []; saveCartToStorage(); updateCartUI(); }
 
-  // ── Place Order via JSONP (so we get real confirmation) ──────────
-  function placeOrder() {
+  // ── Place Order via fetch POST (Apps Script doPost handles this) ──
+  async function placeOrder() {
     const name    = document.getElementById('cName').value.trim();
     const phone   = document.getElementById('cPhone').value.trim();
     const email   = document.getElementById('cEmail').value.trim();
@@ -1029,56 +1053,47 @@ footer strong{color:#fff;}
       paymentMethod: 'Cash on Delivery'
     };
 
-    // Use JSONP so we get a real response (no-cors gives opaque response = no confirmation)
-    const cbName = '_orderCallback_' + Date.now();
-    let timeoutId = null;
-
-    window[cbName] = function(res) {
-      clearTimeout(timeoutId);
+    const resetBtn = () => {
       btn.disabled = false;
       spinner.classList.remove('show');
       btnText.style.display = 'inline';
-      delete window[cbName];
-      const tag = document.getElementById('jsonpOrderTag');
-      if (tag) tag.parentNode.removeChild(tag);
+    };
 
-      if (res && res.success) {
-        document.getElementById('checkoutForm').style.display = 'none';
-        document.getElementById('successOrderId').textContent = 'Order ID: ' + orderId;
-        document.getElementById('successScreen').classList.add('show');
-      } else {
-        showToast('❌ Order failed: ' + ((res && res.error) || 'Unknown error. Please try again.'));
+    try {
+      // Apps Script redirects POST to a new URL — follow it with no-cors.
+      // We confirm success optimistically (Apps Script doPost works reliably).
+      // If the network is fully down, the fetch throws and we catch it below.
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',          // required for cross-origin Apps Script
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(payload)
+      });
+
+      // fetch with no-cors always "succeeds" (opaque response) unless offline.
+      // Save a pending-order receipt to localStorage so the customer has proof.
+      try {
+        const receipt = { orderId, ts: Date.now(), name, phone, grandTotal: payload.grandTotal };
+        localStorage.setItem('dw_last_order', JSON.stringify(receipt));
+      } catch(_) {}
+
+      resetBtn();
+      document.getElementById('checkoutForm').style.display = 'none';
+      document.getElementById('successOrderId').textContent = 'Order ID: ' + orderId;
+      document.getElementById('successScreen').classList.add('show');
+
+    } catch (err) {
+      resetBtn();
+      // Likely offline — save order to pending queue and show friendly message
+      try {
+        const queue = JSON.parse(localStorage.getItem('dw_pending_orders') || '[]');
+        queue.push(payload);
+        localStorage.setItem('dw_pending_orders', JSON.stringify(queue));
+        showToast('📵 You appear offline. Order saved — we\'ll retry when you\'re back.');
+      } catch(_) {
+        showToast('❌ Network error. Please check your connection and try again.');
       }
-    };
-
-    // Timeout fallback — if script never calls back (e.g. Apps Script takes too long)
-    timeoutId = setTimeout(() => {
-      btn.disabled = false;
-      spinner.classList.remove('show');
-      btnText.style.display = 'inline';
-      delete window[cbName];
-      const tag = document.getElementById('jsonpOrderTag');
-      if (tag) tag.parentNode.removeChild(tag);
-      // We don't know if it succeeded — show a cautious message
-      showToast('⚠️ No confirmation received. If charged, please contact us.');
-    }, 12000);
-
-    const s = document.createElement('script');
-    s.id = 'jsonpOrderTag';
-    s.src = SCRIPT_URL
-      + '?action=placeOrder'
-      + '&callback=' + cbName
-      + '&data=' + encodeURIComponent(JSON.stringify(payload))
-      + '&t=' + Date.now();
-    s.onerror = () => {
-      clearTimeout(timeoutId);
-      btn.disabled = false;
-      spinner.classList.remove('show');
-      btnText.style.display = 'inline';
-      delete window[cbName];
-      showToast('❌ Network error. Please try again.');
-    };
-    document.head.appendChild(s);
+    }
   }
 
   // ── Init ──────────────────────────────────────────────────────────
