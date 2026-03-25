@@ -415,6 +415,7 @@ async function handleLogin() {
   const resetBtn = () => { btn.disabled=false; spinner.classList.remove('show'); btnText.style.display=''; };
  
   const payload = {
+    action:     'logLogin',
     loginType:  currentTab,
     identifier: identifier,
     password:   password,
