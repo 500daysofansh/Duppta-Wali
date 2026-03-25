@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DupattaWali — Sign In</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --crimson:       #6B0F1A;
+  --crimson-deep:  #3D0609;
+  --crimson-light: #9B2335;
+  --gold:          #C9A227;
+  --gold-light:    #E4C05A;
+  --gold-pale:     #F5E9C0;
+  --ivory:         #FBF8F4;
+  --ivory-warm:    #F5EFE6;
+  --off-white:     #FFFDF9;
+  --ink:           #1C0A00;
+  --ink-mid:       #5C3020;
+  --ink-muted:     #9C7060;
+  --border:        #E8D8C8;
+  --border-gold:   #D4B870;
+  --green:         #1A5C36;
+  --red:           #B91C1C;
+  --shadow-card:   0 0 0 1px rgba(201,162,39,.18), 0 32px 80px rgba(28,10,0,.30);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Jost',sans-serif;
+  background:var(--crimson-deep);
+  color:var(--ink);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  overflow-x:hidden;
+  position:relative;
+  padding:24px 16px;
+}
+/* BG */
+.bg-layer{position:fixed;inset:0;pointer-events:none;z-index:0;}
+.bg-layer::before{
+  content:'';position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Ccircle cx='40' cy='40' r='18' fill='none' stroke='%23ffffff' stroke-width='.35' opacity='.04'/%3E%3Ccircle cx='40' cy='40' r='6' fill='none' stroke='%23C9A227' stroke-width='.3' opacity='.08'/%3E%3Ccircle cx='0' cy='0' r='9' fill='none' stroke='%23C9A227' stroke-width='.25' opacity='.06'/%3E%3Ccircle cx='80' cy='80' r='9' fill='none' stroke='%23C9A227' stroke-width='.25' opacity='.06'/%3E%3Ccircle cx='80' cy='0' r='9' fill='none' stroke='%23C9A227' stroke-width='.25' opacity='.06'/%3E%3Ccircle cx='0' cy='80' r='9' fill='none' stroke='%23C9A227' stroke-width='.25' opacity='.06'/%3E%3C/svg%3E");
+}
+.orb{position:absolute;border-radius:50%;filter:blur(90px);}
+.orb-1{width:560px;height:560px;background:radial-gradient(circle,rgba(201,162,39,.10) 0%,transparent 70%);top:-160px;right:-120px;animation:drift1 14s ease-in-out infinite alternate;}
+.orb-2{width:420px;height:420px;background:radial-gradient(circle,rgba(107,15,26,.45) 0%,transparent 70%);bottom:-100px;left:-80px;animation:drift2 11s ease-in-out infinite alternate;}
+.orb-3{width:320px;height:320px;background:radial-gradient(circle,rgba(201,162,39,.07) 0%,transparent 70%);top:45%;left:50%;transform:translate(-50%,-50%);animation:drift1 9s ease-in-out infinite alternate;}
+@keyframes drift1{from{transform:translate(0,0)}to{transform:translate(28px,-24px)}}
+@keyframes drift2{from{transform:translate(0,0)}to{transform:translate(-20px,18px)}}
+ 
+/* Card */
+.card-wrap{position:relative;z-index:1;width:min(460px,100%);animation:riseIn .65s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes riseIn{from{opacity:0;transform:translateY(36px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+.card{background:var(--off-white);border-radius:20px;box-shadow:var(--shadow-card);overflow:hidden;}
+ 
+/* Banner */
+.card-banner{
+  background:linear-gradient(135deg,var(--crimson-deep) 0%,var(--crimson) 60%,var(--crimson-light) 100%);
+  padding:34px 36px 30px;position:relative;overflow:hidden;
+}
+.card-banner::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ccircle cx='20' cy='20' r='8' fill='none' stroke='%23ffffff' stroke-width='.3' opacity='.07'/%3E%3C/svg%3E");}
+.card-banner::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent 0%,var(--gold) 40%,var(--gold-light) 60%,transparent 100%);opacity:.8;}
+.logo{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:600;color:#fff;letter-spacing:-.5px;line-height:1;position:relative;z-index:1;}
+.logo span{color:var(--gold-light);}
+.logo-rule{width:48px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);margin:10px 0 8px;position:relative;z-index:1;}
+.logo-sub{font-size:10px;font-weight:400;color:rgba(255,255,255,.5);letter-spacing:3px;text-transform:uppercase;position:relative;z-index:1;}
+ 
+/* Body */
+.card-body{padding:32px 36px 36px;}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--ink);letter-spacing:-.3px;margin-bottom:4px;}
+.section-sub{font-size:12px;color:var(--ink-muted);font-weight:300;margin-bottom:24px;letter-spacing:.3px;}
+ 
+/* Alerts */
+.alert{border-radius:6px;padding:11px 14px;font-size:13px;font-weight:500;margin-bottom:18px;display:none;align-items:flex-start;gap:8px;line-height:1.5;animation:alertIn .3s ease both;}
+.alert.show{display:flex;}
+@keyframes alertIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.alert-error{background:#FEF2F2;color:var(--red);border:1px solid #FECACA;}
+.alert-success{background:#F0FFF6;color:var(--green);border:1px solid rgba(26,92,54,.3);}
+ 
+/* Tabs */
+.tab-row{display:grid;grid-template-columns:1fr 1fr;border:1.5px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:24px;}
+.tab-btn{background:transparent;border:none;cursor:pointer;padding:11px 0;font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-muted);transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;}
+.tab-btn.active{background:var(--crimson);color:#fff;}
+.tab-btn:not(.active):hover{background:var(--ivory-warm);color:var(--ink-mid);}
+ 
+/* Form */
+.form-group{margin-bottom:18px;}
+.form-label{display:flex;align-items:center;justify-content:space-between;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-mid);margin-bottom:8px;}
+.form-label-hint{font-size:9px;color:var(--ink-muted);letter-spacing:.5px;font-weight:400;text-transform:none;}
+.input-wrap{position:relative;}
+.input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:15px;pointer-events:none;opacity:.45;line-height:1;}
+.form-input{width:100%;padding:13px 14px 13px 44px;border:1.5px solid var(--border);border-radius:8px;background:var(--ivory);font-family:'Jost',sans-serif;font-size:14px;color:var(--ink);transition:border-color .2s,box-shadow .2s,background .2s;outline:none;-webkit-appearance:none;}
+.form-input::placeholder{color:var(--ink-muted);opacity:.7;}
+.form-input:focus{border-color:var(--crimson);background:#fff;box-shadow:0 0 0 3px rgba(107,15,26,.08);}
+.form-input.is-error{border-color:var(--red);background:#fff8f8;box-shadow:0 0 0 3px rgba(185,28,28,.07);}
+.form-input.is-valid{border-color:var(--green);}
+.eye-btn{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:17px;line-height:1;opacity:.4;transition:opacity .2s;padding:4px;user-select:none;}
+.eye-btn:hover{opacity:.75;}
+ 
+/* Strength */
+.strength-wrap{margin-top:8px;}
+.strength-bars{display:flex;gap:4px;margin-bottom:5px;}
+.strength-seg{flex:1;height:3px;background:var(--border);border-radius:2px;transition:background .3s;}
+.strength-label{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;min-height:14px;transition:color .3s;}
+.field-error{font-size:11px;color:var(--red);margin-top:6px;font-weight:500;min-height:16px;}
+ 
+/* Submit */
+.submit-btn{width:100%;background:var(--crimson);color:#fff;border:none;cursor:pointer;padding:16px;border-radius:8px;font-family:'Jost',sans-serif;font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:10px;transition:background .2s,transform .15s,box-shadow .2s;box-shadow:0 4px 20px rgba(107,15,26,.35);position:relative;overflow:hidden;}
+.submit-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.08) 0%,transparent 50%);pointer-events:none;}
+.submit-btn:hover:not(:disabled){background:var(--crimson-deep);transform:translateY(-1px);box-shadow:0 10px 32px rgba(107,15,26,.45);}
+.submit-btn:active:not(:disabled){transform:translateY(0);}
+.submit-btn:disabled{background:var(--ink-muted);cursor:not-allowed;box-shadow:none;}
+.spinner{width:18px;height:18px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none;flex-shrink:0;}
+.spinner.show{display:block;}
+@keyframes spin{to{transform:rotate(360deg)}}
+ 
+/* Divider & foot */
+.divider{display:flex;align-items:center;gap:12px;margin:22px 0;color:var(--ink-muted);font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:500;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.card-foot{text-align:center;font-size:12px;color:var(--ink-muted);font-weight:300;line-height:1.7;}
+.card-foot strong{color:var(--gold);font-weight:600;font-family:'Cormorant Garamond',serif;font-size:15px;}
+.trust-row{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-top:14px;padding-top:16px;border-top:1px solid var(--border);}
+.trust-badge{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--ink-muted);}
+ 
+/* Success */
+.success-overlay{display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:56px 36px;}
+.success-overlay.show{display:flex;}
+.success-icon{font-size:68px;margin-bottom:20px;animation:popIn .55s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes popIn{from{transform:scale(0) rotate(-15deg);opacity:0}to{transform:scale(1) rotate(0deg);opacity:1}}
+.success-overlay h2{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:600;color:var(--green);margin-bottom:10px;letter-spacing:-.5px;}
+.success-overlay p{font-size:14px;color:var(--ink-muted);font-weight:300;margin-bottom:28px;line-height:1.6;}
+.progress-wrap{width:200px;margin-bottom:10px;}
+.progress-bg{height:3px;background:var(--border);border-radius:2px;overflow:hidden;}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--crimson),var(--gold));border-radius:2px;width:0%;transition:width .12s linear;}
+.redirect-hint{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-muted);font-weight:500;}
+ 
+/* Brand strip */
+.brand-strip{text-align:center;margin-top:24px;font-size:11px;color:rgba(255,255,255,.28);letter-spacing:2px;text-transform:uppercase;font-weight:300;position:relative;z-index:1;animation:riseIn .7s .25s both;}
+.brand-strip strong{color:rgba(201,162,39,.65);font-weight:600;}
+ 
+/* Toast */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(90px);background:var(--ink);color:#fff;padding:12px 24px;font-size:13px;font-weight:500;letter-spacing:.3px;z-index:999;box-shadow:0 24px 60px rgba(28,10,0,.3);transition:transform .35s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;border-left:3px solid var(--gold);border-radius:4px;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+ 
+@media(max-width:480px){
+  .card-banner{padding:26px 24px 22px;}
+  .card-body{padding:24px 24px 28px;}
+  .logo{font-size:30px;}
+}
+</style>
+</head>
+<body>
+ 
+<div class="bg-layer">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+ 
+<div class="card-wrap">
+  <div class="card">
+ 
+    <!-- Banner -->
+    <div class="card-banner">
+      <div class="logo">Dupatta<span>Wali</span></div>
+      <div class="logo-rule"></div>
+      <div class="logo-sub">✦ Prayagraj's Ethnic Fashion Store ✦</div>
+    </div>
+ 
+    <!-- Form -->
+    <div id="formSection">
+      <div class="card-body">
+ 
+        <div class="section-title">Welcome Back</div>
+        <div class="section-sub">Sign in to explore our latest collection</div>
+ 
+        <div class="alert alert-error"   id="alertError"><span>⚠️</span><span id="alertErrMsg">Something went wrong.</span></div>
+        <div class="alert alert-success" id="alertSuccess"><span>✓</span><span id="alertOkMsg">Logged in!</span></div>
+ 
+        <!-- Tabs -->
+        <div class="tab-row">
+          <button class="tab-btn active" id="tabEmail" onclick="switchTab('email')">✉️ &nbsp;Email</button>
+          <button class="tab-btn"        id="tabPhone" onclick="switchTab('phone')">📱 &nbsp;Phone</button>
+        </div>
+ 
+        <!-- Email -->
+        <div class="form-group" id="emailGroup">
+          <div class="form-label">Email Address</div>
+          <div class="input-wrap">
+            <span class="input-icon">✉️</span>
+            <input class="form-input" type="email" id="emailInput"
+                   placeholder="priya@email.com" autocomplete="email"
+                   oninput="validateId()"/>
+          </div>
+          <div class="field-error" id="emailError"></div>
+        </div>
+ 
+        <!-- Phone -->
+        <div class="form-group" id="phoneGroup" style="display:none">
+          <div class="form-label">
+            Phone Number
+            <span class="form-label-hint">10 digits</span>
+          </div>
+          <div class="input-wrap">
+            <span class="input-icon">📱</span>
+            <input class="form-input" type="tel" id="phoneInput"
+                   placeholder="9876543210" maxlength="10" autocomplete="tel"
+                   oninput="this.value=this.value.replace(/\D/g,'');validateId()"/>
+          </div>
+          <div class="field-error" id="phoneError"></div>
+        </div>
+ 
+        <!-- Password -->
+        <div class="form-group">
+          <div class="form-label">
+            Password
+            <span class="form-label-hint">Min. 8 characters</span>
+          </div>
+          <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input class="form-input" type="password" id="passwordInput"
+                   placeholder="Enter your password"
+                   autocomplete="current-password"
+                   oninput="validatePass()"/>
+            <button class="eye-btn" id="eyeBtn" onclick="toggleEye()" type="button">👁️</button>
+          </div>
+          <div class="strength-wrap" id="strengthWrap" style="display:none">
+            <div class="strength-bars">
+              <div class="strength-seg" id="seg0"></div>
+              <div class="strength-seg" id="seg1"></div>
+              <div class="strength-seg" id="seg2"></div>
+              <div class="strength-seg" id="seg3"></div>
+            </div>
+            <div class="strength-label" id="strengthLabel"></div>
+          </div>
+          <div class="field-error" id="passError"></div>
+        </div>
+ 
+        <button class="submit-btn" id="submitBtn" onclick="handleLogin()">
+          <span id="btnText">Enter the Store →</span>
+          <div class="spinner" id="btnSpinner"></div>
+        </button>
+ 
+        <div class="divider">Cash on Delivery · Free Shipping</div>
+ 
+        <div class="card-foot">
+          Your trusted store — <strong>DupattaWali</strong>
+          <div class="trust-row">
+            <span class="trust-badge">🔒 Secure</span>
+            <span class="trust-badge">💵 COD Available</span>
+            <span class="trust-badge">🚚 Free Delivery</span>
+          </div>
+        </div>
+ 
+      </div>
+    </div>
+ 
+    <!-- Success -->
+    <div class="success-overlay" id="successOverlay">
+      <div class="success-icon">🎉</div>
+      <h2>You're In!</h2>
+      <p>Welcome to DupattaWali.<br/>Taking you to the store…</p>
+      <div class="progress-wrap">
+        <div class="progress-bg"><div class="progress-bar" id="progressBar"></div></div>
+      </div>
+      <div class="redirect-hint" id="redirectHint">Redirecting in 3s…</div>
+    </div>
+ 
+  </div><!-- /.card -->
+ 
+  <div class="brand-strip">✦ <strong>DupattaWali</strong> &nbsp;·&nbsp; Ethnic Fashion &nbsp;·&nbsp; Prayagraj ✦</div>
+</div>
+ 
+<div class="toast" id="toast"></div>
+ 
+<script>
+/* ═══════════════════════════════════════════════
+   ⚙️  CONFIG — update after deploying Apps Script
+   ═══════════════════════════════════════════════ */
+const SCRIPT_URL   = "YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+const STORE_URL    = "dupattawali.html";   // redirect target
+const REDIRECT_SEC = 3;
+ 
+/* ── State ── */
+let currentTab = 'email';
+let eyeOpen    = false;
+let toastTimer = null;
+ 
+/* ── Toast ── */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+ 
+/* ── Alerts ── */
+function showAlert(type, msg) {
+  document.getElementById('alertError').classList.remove('show');
+  document.getElementById('alertSuccess').classList.remove('show');
+  if (type === 'error') {
+    document.getElementById('alertErrMsg').textContent = msg;
+    document.getElementById('alertError').classList.add('show');
+  } else {
+    document.getElementById('alertOkMsg').textContent = msg;
+    document.getElementById('alertSuccess').classList.add('show');
+  }
+}
+function hideAlerts() {
+  document.getElementById('alertError').classList.remove('show');
+  document.getElementById('alertSuccess').classList.remove('show');
+}
+ 
+/* ── Tab switch ── */
+function switchTab(tab) {
+  currentTab = tab;
+  document.getElementById('tabEmail').classList.toggle('active', tab === 'email');
+  document.getElementById('tabPhone').classList.toggle('active', tab === 'phone');
+  document.getElementById('emailGroup').style.display = tab === 'email' ? '' : 'none';
+  document.getElementById('phoneGroup').style.display = tab === 'phone' ? '' : 'none';
+  ['emailError','phoneError'].forEach(id => document.getElementById(id).textContent = '');
+  ['emailInput','phoneInput'].forEach(id => document.getElementById(id).classList.remove('is-error','is-valid'));
+  hideAlerts();
+}
+ 
+/* ── Validate identifier ── */
+function validateId() {
+  hideAlerts();
+  if (currentTab === 'email') {
+    const el  = document.getElementById('emailInput');
+    const err = document.getElementById('emailError');
+    const v   = el.value.trim();
+    if (!v) { el.classList.remove('is-error','is-valid'); err.textContent=''; return false; }
+    const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+    el.classList.toggle('is-error',!ok); el.classList.toggle('is-valid',ok);
+    err.textContent = ok ? '' : 'Please enter a valid email address.';
+    return ok;
+  } else {
+    const el  = document.getElementById('phoneInput');
+    const err = document.getElementById('phoneError');
+    const v   = el.value.trim();
+    if (!v) { el.classList.remove('is-error','is-valid'); err.textContent=''; return false; }
+    const ok = /^\d{10}$/.test(v);
+    el.classList.toggle('is-error',!ok); el.classList.toggle('is-valid',ok);
+    err.textContent = ok ? '' : 'Enter a valid 10-digit phone number.';
+    return ok;
+  }
+}
+ 
+/* ── Validate password ── */
+const S_COLORS = ['','#EF4444','#F97316','#EAB308','#22C55E'];
+const S_LABELS = ['','Weak','Fair','Good','Strong'];
+ 
+function setStrength(lvl) {
+  for (let i=0;i<4;i++) document.getElementById('seg'+i).style.background = i<lvl ? S_COLORS[lvl] : 'var(--border)';
+  const lbl = document.getElementById('strengthLabel');
+  lbl.textContent = S_LABELS[lvl]||'';
+  lbl.style.color = S_COLORS[lvl]||'var(--ink-muted)';
+}
+ 
+function validatePass() {
+  const el   = document.getElementById('passwordInput');
+  const err  = document.getElementById('passError');
+  const wrap = document.getElementById('strengthWrap');
+  const v    = el.value;
+  if (!v) { el.classList.remove('is-error','is-valid'); err.textContent=''; wrap.style.display='none'; setStrength(0); return false; }
+  wrap.style.display = '';
+  if (v.length < 8) {
+    el.classList.add('is-error'); el.classList.remove('is-valid');
+    err.textContent = 'Password must be at least 8 characters.';
+    setStrength(1); return false;
+  }
+  err.textContent = '';
+  let score = 1;
+  if (v.length >= 12) score++;
+  if (/[A-Z]/.test(v) && /[a-z]/.test(v)) score++;
+  if (/\d/.test(v) && /[^A-Za-z0-9]/.test(v)) score++;
+  setStrength(Math.min(score,4));
+  el.classList.remove('is-error'); el.classList.add('is-valid');
+  return true;
+}
+ 
+/* ── Eye toggle ── */
+function toggleEye() {
+  eyeOpen = !eyeOpen;
+  document.getElementById('passwordInput').type = eyeOpen ? 'text' : 'password';
+  document.getElementById('eyeBtn').textContent  = eyeOpen ? '🙈' : '👁️';
+}
+ 
+/* ── Main handler ── */
+async function handleLogin() {
+  hideAlerts();
+  const idOk   = validateId();
+  const passOk = validatePass();
+  if (!idOk)   { showAlert('error', currentTab==='email' ? 'Please enter a valid email address.' : 'Please enter a valid 10-digit phone number.'); return; }
+  if (!passOk) { showAlert('error', 'Password must be at least 8 characters.'); return; }
+ 
+  const identifier = currentTab === 'email'
+    ? document.getElementById('emailInput').value.trim()
+    : document.getElementById('phoneInput').value.trim();
+  const password = document.getElementById('passwordInput').value;
+ 
+  const btn     = document.getElementById('submitBtn');
+  const spinner = document.getElementById('btnSpinner');
+  const btnText = document.getElementById('btnText');
+  btn.disabled = true; spinner.classList.add('show'); btnText.style.display='none';
+ 
+  const resetBtn = () => { btn.disabled=false; spinner.classList.remove('show'); btnText.style.display=''; };
+ 
+  const payload = {
+    loginType:  currentTab,
+    identifier: identifier,
+    password:   password,
+    userAgent:  navigator.userAgent,
+    timestamp:  new Date().toISOString()
+  };
+ 
+  try {
+    await fetch(SCRIPT_URL, {
+      method:  'POST',
+      mode:    'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body:    JSON.stringify(payload)
+    });
+  } catch (_) {
+    // Offline — still allow entry
+    console.warn('DupattaWali Login: Apps Script unreachable (offline?)');
+  }
+ 
+  resetBtn();
+  startSuccessRedirect();
+}
+ 
+/* ── Success + countdown redirect ── */
+function startSuccessRedirect() {
+  document.getElementById('formSection').style.display = 'none';
+  document.getElementById('successOverlay').classList.add('show');
+ 
+  const bar   = document.getElementById('progressBar');
+  const hint  = document.getElementById('redirectHint');
+  const total = REDIRECT_SEC * 1000;
+  const start = Date.now();
+ 
+  (function tick() {
+    const elapsed = Date.now() - start;
+    const pct     = Math.min((elapsed / total) * 100, 100);
+    bar.style.width = pct + '%';
+    const secs = Math.max(0, Math.ceil((total - elapsed) / 1000));
+    hint.textContent = secs > 0 ? 'Redirecting in ' + secs + 's\u2026' : 'Going to store\u2026';
+    if (elapsed < total) requestAnimationFrame(tick);
+    else window.location.href = STORE_URL;
+  })();
+}
+ 
+/* ── Enter key ── */
+document.addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
+</script>
+</body>
+</html>
