@@ -30,7 +30,7 @@ header{background:var(--warm-white);border-bottom:1px solid var(--border);positi
 .header-actions{display:flex;align-items:center;gap:16px;}
 .track-link{color:var(--brown);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;text-decoration:none;transition:color .2s;}
 .track-link:hover{color:var(--saffron);}
-@media(max-width:480px){.track-link span{display:none;}} 
+@media(max-width:480px){.track-link span{display:none;}} /* Hides the text on very small screens, keeps the icon */
 .cart-btn{background:var(--saffron);color:#fff;border:none;cursor:pointer;padding:10px 20px;border-radius:50px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px;transition:all .2s;}
 .cart-btn:hover{background:var(--brown);}
 .cart-count{background:#fff;color:var(--saffron);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
@@ -811,12 +811,23 @@ footer strong{color:#fff;}
       item.className = 'cart-item';
 
       if (imgs.length) {
-        const img = document.createElement('img'); img.src = imgs[0]; img.alt = it.name; img.onerror = () => { img.style.display = 'none'; };
+        const img = document.createElement('img'); 
+        img.src = imgs[0]; 
+        img.alt = it.name; 
         item.appendChild(img);
+        
+        // FIX: Replace broken images with a placeholder box instead of making them vanish
+        img.onerror = () => { 
+          const ph = document.createElement('div');
+          ph.style.cssText = 'width:80px;height:80px;background:#F5E8D8;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:24px';
+          ph.textContent = '🛍️';
+          img.replaceWith(ph); 
+        };
       } else {
         const ph = document.createElement('div');
         ph.style.cssText = 'width:80px;height:80px;background:#F5E8D8;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:24px';
-        ph.textContent = '🛍️'; item.appendChild(ph);
+        ph.textContent = '🛍️'; 
+        item.appendChild(ph);
       }
 
       const info = document.createElement('div');
