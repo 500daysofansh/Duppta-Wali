@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>DupattaWali — Sign In</title>
+<title>DupattaWali — Sign In / Sign Up</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
@@ -241,7 +241,14 @@ body{
           </div>
           <div class="field-error" id="passError"></div>
         </div>
- 
+        
+        <!-- SIGNUP TOGGLE -->
+        <div style="text-align: right; margin-bottom: 12px;">
+          <button type="button" id="toggleModeBtn" onclick="toggleSignupMode()" style="background: none; border: none; color: var(--gold); font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: underline;">
+            New here? Create an account
+          </button>
+        </div>
+
         <button class="submit-btn" id="submitBtn" onclick="handleLogin()">
           <span id="btnText">Enter the Store →</span>
           <div class="spinner" id="btnSpinner"></div>
@@ -264,8 +271,8 @@ body{
     <!-- Success -->
     <div class="success-overlay" id="successOverlay">
       <div class="success-icon">🎉</div>
-      <h2>You're In!</h2>
-      <p>Welcome to DupattaWali.<br/>Taking you to the store…</p>
+      <h2 id="successTitle">You're In!</h2>
+      <p id="successSub">Welcome to DupattaWali.<br/>Taking you to the store…</p>
       <div class="progress-wrap">
         <div class="progress-bg"><div class="progress-bar" id="progressBar"></div></div>
       </div>
@@ -288,10 +295,33 @@ const STORE_URL    = "index.html";   // redirect target
 const REDIRECT_SEC = 3;
  
 /* ── State ── */
-let currentTab = 'email';
-let eyeOpen    = false;
-let toastTimer = null;
+let currentTab   = 'email';
+let eyeOpen      = false;
+let toastTimer   = null;
+let isSignupMode = false; // NEW STATE
  
+/* ── Toggle Sign Up / Sign In ── */
+function toggleSignupMode() {
+  isSignupMode = !isSignupMode;
+  
+  const title = document.querySelector('.section-title');
+  const sub = document.querySelector('.section-sub');
+  const btnText = document.getElementById('btnText');
+  const toggleBtn = document.getElementById('toggleModeBtn');
+
+  if (isSignupMode) {
+    title.textContent = 'Create Account';
+    sub.textContent = 'Join DupattaWali today';
+    btnText.textContent = 'Sign Up →';
+    toggleBtn.textContent = 'Already have an account? Sign in';
+  } else {
+    title.textContent = 'Welcome Back';
+    sub.textContent = 'Sign in to explore our latest collection';
+    btnText.textContent = 'Enter the Store →';
+    toggleBtn.textContent = 'New here? Create an account';
+  }
+}
+
 /* ── Toast ── */
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -414,29 +444,49 @@ async function handleLogin() {
  
   const resetBtn = () => { btn.disabled=false; spinner.classList.remove('show'); btnText.style.display=''; };
  
+  // ADDED isSignup FLAG
   const payload = {
     action:     'logLogin',
     loginType:  currentTab,
     identifier: identifier,
     password:   password,
+    isSignup:   isSignupMode, 
     userAgent:  navigator.userAgent,
     timestamp:  new Date().toISOString()
   };
  
   try {
-    await fetch(SCRIPT_URL, {
+    // REMOVED 'no-cors' so we can read the server response
+    const response = await fetch(SCRIPT_URL, {
       method:  'POST',
-      mode:    'no-cors',
       headers: { 'Content-Type': 'text/plain' },
       body:    JSON.stringify(payload)
     });
-  } catch (_) {
-    // Offline — still allow entry
-    console.warn('DupattaWali Login: Apps Script unreachable (offline?)');
+    
+    const result = await response.json();
+    resetBtn();
+
+    if (result.success) {
+      // Save session securely
+      localStorage.setItem('dw_user', JSON.stringify({ identifier: identifier, type: currentTab }));
+      
+      // Update success messaging if it was a signup
+      if (isSignupMode) {
+        document.getElementById('successTitle').textContent = 'Welcome!';
+        document.getElementById('successSub').innerHTML = 'Account created successfully.<br/>Taking you to the store…';
+      }
+      
+      startSuccessRedirect();
+    } else {
+      // Show actual error message from server
+      showAlert('error', result.error || 'Authentication failed.');
+    }
+
+  } catch (err) {
+    resetBtn();
+    showAlert('error', 'Network error. Please check your connection.');
+    console.warn('DupattaWali Auth Error:', err);
   }
- 
-  resetBtn();
-  startSuccessRedirect();
 }
  
 /* ── Success + countdown redirect ── */
