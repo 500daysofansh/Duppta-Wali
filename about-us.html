@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>About Us — DupattaWali</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+/* Core Variables & Reset */
+:root{--saffron:#E8600A;--saffron-light:#FF8C38;--cream:#FDF6EE;--warm-white:#FFFAF5;--brown:#3D1F00;--brown-mid:#7A4010;--muted:#A07050;--card-bg:#FFFFFF;--border:#F0DCC8;--green:#2D7A4F;--shadow:0 4px 24px rgba(61,31,0,.10);--shadow-hover:0 12px 40px rgba(232,96,10,.18);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--brown);}
+
+/* Header */
+header{background:var(--warm-white);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(61,31,0,.06);}
+.header-inner{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:72px;}
+.logo{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--saffron);text-decoration:none;}
+.logo span{color:var(--brown);}
+
+/* About Us Specific Styles */
+.about-wrapper { max-width: 1100px; margin: 0 auto; padding: 60px 24px; }
+.about-header { text-align: center; margin-bottom: 56px; }
+.about-header h1 { font-family: 'Playfair Display', serif; font-size: clamp(36px, 5vw, 48px); color: var(--brown); margin-bottom: 16px; font-weight: 900; }
+.about-header h1 span { color: var(--saffron); font-style: italic; }
+.about-header p { font-size: 18px; color: var(--muted); max-width: 600px; margin: 0 auto; line-height: 1.6; }
+
+/* Story Grid */
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; margin-bottom: 80px; }
+@media(max-width: 768px) { .about-grid { grid-template-columns: 1fr; gap: 24px; } }
+
+.about-image-card { background: var(--saffron-light); border-radius: 20px; padding: 40px; text-align: center; color: #fff; display: flex; flex-direction: column; justify-content: center; min-height: 400px; background: linear-gradient(135deg, var(--brown) 0%, var(--saffron) 100%); position: relative; overflow: hidden; }
+.about-image-card::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+.about-image-card h2 { font-family: 'Playfair Display', serif; font-size: 36px; position: relative; z-index: 1; line-height: 1.2; }
+
+.about-text-box { background: var(--card-bg); padding: 48px 40px; border-radius: 20px; border: 1px solid var(--border); box-shadow: var(--shadow); }
+.about-text-box h3 { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--saffron); margin-bottom: 20px; }
+.about-text-box p { font-size: 15.5px; color: var(--brown-mid); line-height: 1.8; margin-bottom: 16px; }
+.about-text-box p:last-child { margin-bottom: 0; }
+
+/* Values Section */
+.values-title { text-align: center; font-family: 'Playfair Display', serif; font-size: 32px; color: var(--brown); margin-bottom: 40px; }
+.values-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
+.value-card { background: var(--warm-white); border: 1px solid var(--border); padding: 40px 24px; border-radius: 16px; text-align: center; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 4px 12px rgba(61,31,0,.04); }
+.value-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); border-color: var(--saffron-light); }
+.value-icon { font-size: 48px; margin-bottom: 20px; display: inline-block; }
+.value-card h4 { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--brown); margin-bottom: 12px; font-weight: 700; }
+.value-card p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+/* Footer */
+footer{background:var(--brown);color:rgba(255,255,255,.7);text-align:center;padding:32px 24px;font-size:14px;margin-top:40px;}
+footer strong{color:#fff;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="logo" href="/">Dupatta<span>Wali</span></a>
+  </div>
+</header>
+
+<main class="about-wrapper">
+  
+  <div class="about-header">
+    <h1>Redefining <span>Ethnic Wear</span></h1>
+    <p>Bringing you the most stunning, handpicked traditional apparel and accessories without breaking the bank.</p>
+  </div>
+
+  <div class="about-grid">
+    <div class="about-image-card">
+      <h2>Curated for the<br>Modern Women<br>of Prayagraj</h2>
+    </div>
+    
+    <div class="about-text-box">
+      <h3>Our Story</h3>
+      <p>Finding the perfect ethnic wear that balances beautiful traditional aesthetics with modern college and daily-wear budgets has always been a challenge. That’s why we started <strong>DupattaWali</strong>.</p>
+      <p>We are a curated boutique dedicated to sourcing the best Kurtis, Dupattas, Jewellery, and combo sets from top suppliers across India. By acting as a bridge between high-quality manufacturers and you, we eliminate unnecessary retail markups.</p>
+      <p>Whether you're dressing up for a college fest, a family pooja, or just upgrading your daily wardrobe, our mission is to make sure you have access to the latest trends with the convenience of doorstep delivery.</p>
+    </div>
+  </div>
+
+  <h2 class="values-title">Why Shop With Us?</h2>
+  <div class="values-grid">
+    
+    <div class="value-card">
+      <div class="value-icon">✨</div>
+      <h4>Handpicked Quality</h4>
+      <p>We personally sift through thousands of designs to curate a catalog of only the best fabrics, trends, and accessories.</p>
+    </div>
+
+    <div class="value-card">
+      <div class="value-icon">💸</div>
+      <h4>Budget Friendly</h4>
+      <p>Looking gorgeous shouldn't cost a fortune. Our direct-sourcing model ensures you get the best styles at unbeatable prices.</p>
+    </div>
+
+    <div class="value-card">
+      <div class="value-icon">🚚</div>
+      <h4>Cash on Delivery</h4>
+      <p>Shop with complete peace of mind. We offer 100% Cash on Delivery and free shipping on all orders across India.</p>
+    </div>
+
+    <div class="value-card">
+      <div class="value-icon">🌸</div>
+      <h4>Local Roots</h4>
+      <p>Built with love for the vibrant culture and women of Prayagraj. We understand exactly what our local audience loves to wear.</p>
+    </div>
+
+  </div>
+
+</main>
+
+<footer>
+  <strong>DupattaWali</strong> — Prayagraj's Ethnic Fashion Store<br/>
+  <span>Cash on Delivery · Free Shipping · Delivered Across India</span>
+</footer>
+
+</body>
+</html>
